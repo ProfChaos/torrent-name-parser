@@ -19,32 +19,50 @@ func init() {
 	}
 }
 
+type ContentType int64
+
+const (
+	TV ContentType = iota
+	Movie
+	Unknown
+)
+
+func (c ContentType) String() string {
+	switch c {
+	case TV:
+		return "TV"
+	case Movie:
+		return "Movie"
+	default:
+		return "Unknown"
+	}
+}
+
 type Torrent struct {
-	Title      string `json:"title"`
-	Movie      bool   `json:"movie"`
-	TV         bool   `json:"tv"`
-	Year       int    `json:"year"`
-	Resolution string `json:"resolution"`
-	Extended   bool   `json:"extended"`
-	Unrated    bool   `json:"unrated"`
-	Proper     bool   `json:"proper"`
-	Repack     bool   `json:"repack"`
-	Convert    bool   `json:"convert"`
-	Hardcoded  bool   `json:"hardcoded"`
-	Retail     bool   `json:"retail"`
-	Remastered bool   `json:"remastered"`
-	Region     string `json:"region"`
-	Container  string `json:"container"`
-	Source     string `json:"source"`
-	Codec      string `json:"codec"`
-	Audio      string `json:"audio"`
-	Group      string `json:"group"`
-	Season     int    `json:"season"`
-	Episode    int    `json:"episode"`
-	Language   string `json:"language"`
-	Hdr        bool   `json:"hdr"`
-	ColorDepth string `json:"colorDepth"`
-	Date       string `json:"date"`
+	Title       string      `json:"title"`
+	ContentType ContentType `json:"contentType"`
+	Year        int         `json:"year"`
+	Resolution  string      `json:"resolution"`
+	Extended    bool        `json:"extended"`
+	Unrated     bool        `json:"unrated"`
+	Proper      bool        `json:"proper"`
+	Repack      bool        `json:"repack"`
+	Convert     bool        `json:"convert"`
+	Hardcoded   bool        `json:"hardcoded"`
+	Retail      bool        `json:"retail"`
+	Remastered  bool        `json:"remastered"`
+	Region      string      `json:"region"`
+	Container   string      `json:"container"`
+	Source      string      `json:"source"`
+	Codec       string      `json:"codec"`
+	Audio       string      `json:"audio"`
+	Group       string      `json:"group"`
+	Season      int         `json:"season"`
+	Episode     int         `json:"episode"`
+	Language    string      `json:"language"`
+	Hdr         bool        `json:"hdr"`
+	ColorDepth  string      `json:"colorDepth"`
+	Date        string      `json:"date"`
 }
 
 type Parser struct {
@@ -100,9 +118,9 @@ func (p *Parser) Parse() (Torrent, error) {
 	torrent.Title = p.GetTitle()
 
 	if torrent.Episode > 0 || torrent.Date != "" || torrent.Season > -1 {
-		torrent.TV = true
+		torrent.ContentType = TV
 	} else if torrent.Season == -1 && torrent.Episode == 0 {
-		torrent.Movie = true
+		torrent.ContentType = Movie
 	}
 
 	return torrent, nil
