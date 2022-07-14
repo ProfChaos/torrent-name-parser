@@ -1,3 +1,3 @@
-module github.com/profchaos/torrent-name-parser
+module github.com/ProfChaos/torrent-name-parser
 
 go 1.18
