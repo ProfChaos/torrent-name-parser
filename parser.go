@@ -1,6 +1,8 @@
 package torrentparser
 
 import (
+	"database/sql/driver"
+	"encoding/json"
 	"fmt"
 	"log"
 	"regexp"
@@ -63,6 +65,25 @@ type Torrent struct {
 	Hdr         bool        `json:"hdr"`
 	ColorDepth  string      `json:"colorDepth"`
 	Date        string      `json:"date"`
+}
+
+func (t *Torrent) Scan(value interface{}) error {
+	switch v := value.(type) {
+	case string:
+		return json.Unmarshal([]byte(v), t)
+	case []byte:
+		return json.Unmarshal(v, t)
+	}
+	return nil
+}
+
+func (t Torrent) Value() (driver.Value, error) {
+	b, err := json.Marshal(t)
+	if err != nil {
+		return nil, err
+	}
+
+	return string(b), err
 }
 
 type Parser struct {
