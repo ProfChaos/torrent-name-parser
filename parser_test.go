@@ -18,6 +18,24 @@ func TestParser_Parse(t *testing.T) {
 		wantErr bool
 	}{
 		{
+			name: "Frozen.2.2019.1080p.WEB-DL.H264.AC3-EVO.mp4",
+			fields: fields{
+				Name: "Frozen.2.2019.1080p.WEB-DL.H264.AC3-EVO.mp4",
+			},
+			want: Torrent{
+				Title:       "Frozen 2",
+				Resolution:  "1080p",
+				Year:        2019,
+				Source:      "web-dl",
+				Codec:       "h264",
+				Group:       "EVO",
+				Audio:       "ac3",
+				ContentType: Movie,
+				Container:   "mp4",
+				Season:      -1,
+			},
+		},
+		{
 			name: "sons.of.anarchy.s05e10.480p.BluRay.x264-GAnGSteR",
 			fields: fields{
 				Name: "sons.of.anarchy.s05e10.480p.BluRay.x264-GAnGSteR",
