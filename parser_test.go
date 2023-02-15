@@ -18,6 +18,23 @@ func TestParser_Parse(t *testing.T) {
 		wantErr bool
 	}{
 		{
+			name: "blow-action.point.2018.1080p.bluray.x264.mp4",
+			fields: fields{
+				Name: "blow-action.point.2018.1080p.bluray.x264.mp4",
+			},
+			want: Torrent{
+				Title:       "action point",
+				Resolution:  "1080p",
+				Year:        2018,
+				Source:      "bluray",
+				Codec:       "x264",
+				ContentType: Movie,
+				Season:      -1,
+				Group:       "blow",
+				Container:   "mp4",
+			},
+		},
+		{
 			name: "Frozen.2.2019.1080p.WEB-DL.H264.AC3-EVO.mp4",
 			fields: fields{
 				Name: "Frozen.2.2019.1080p.WEB-DL.H264.AC3-EVO.mp4",
@@ -390,7 +407,7 @@ func TestParser_Parse(t *testing.T) {
 				return
 			}
 			if !reflect.DeepEqual(got, tt.want) {
-				t.Errorf("Parser.Parse() = %+v, want %+v", fmt.Sprintf("%v+", got), fmt.Sprintf("%v+", tt.want))
+				t.Errorf("Parser.Parse() = %+v, want %+v", fmt.Sprintf("%+v+", got), fmt.Sprintf("%+v+", tt.want))
 			}
 		})
 	}

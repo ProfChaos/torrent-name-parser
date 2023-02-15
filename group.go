@@ -23,7 +23,7 @@ func init() {
 	if err != nil {
 		log.Fatalln(err)
 	}
-	groupStart, err = regexp.Compile(`(?i)^(\w+)-`)
+	groupStart, err = regexp.Compile(`(?i)^(\w+-)`)
 	if err != nil {
 		log.Fatalln(err)
 	}
@@ -47,7 +47,9 @@ func (p *Parser) GetGroup() string {
 	if group != "" {
 		return group
 	}
-	group = p.FindString("group", groupStart, FindStringOptions{})
+	group = p.FindString("group", groupStart, FindStringOptions{Handler: func(str string) string {
+		return strings.TrimSuffix(str, "-")
+	}})
 	if group != "" {
 		return group
 	}
