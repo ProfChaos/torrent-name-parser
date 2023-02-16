@@ -1,7 +1,6 @@
 package torrentparser
 
 import (
-	"log"
 	"regexp"
 	"strings"
 )
@@ -14,24 +13,10 @@ var (
 )
 
 func init() {
-	var err error
-	audioGeneral, err = regexp.Compile("(?i)MD|MP3|mp3|FLAC|Atmos|DTS(?:-HD)?|TrueHD|Dual[- ]Audio")
-	if err != nil {
-		log.Fatalln(err)
-	}
-	audioAc3, err = regexp.Compile("(?i)AC-?3(?:.5.1)?")
-	if err != nil {
-		log.Fatalln(err)
-	}
-	audioDd51, err = regexp.Compile("(?i)DD5[. ]?1")
-	if err != nil {
-		log.Fatalln(err)
-	}
-	audioAac, err = regexp.Compile("(?i)AAC(?:[. ]?2[. ]0)?")
-	if err != nil {
-		log.Fatalln(err)
-	}
-
+	audioGeneral = regexp.MustCompile("(?i)MD|MP3|mp3|FLAC|Atmos|DTS(?:-HD)?|TrueHD|Dual[- ]Audio")
+	audioAc3 = regexp.MustCompile("(?i)AC-?3(?:.5.1)?")
+	audioDd51 = regexp.MustCompile("(?i)DD5[. ]?1")
+	audioAac = regexp.MustCompile("(?i)AAC(?:[. ]?2[. ]0)?")
 }
 
 func (p *Parser) GetAudio() string {

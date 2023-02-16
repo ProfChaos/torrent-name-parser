@@ -1,7 +1,6 @@
 package torrentparser
 
 import (
-	"log"
 	"regexp"
 	"strings"
 )
@@ -13,19 +12,9 @@ var (
 )
 
 func init() {
-	var err error
-	sourceGeneral, err = regexp.Compile(`(?i)\b(?:HD-?)?CAM|HD-?Rip|HDTV|BRRip|BDRip|DVDRip|DVDscr|(?:HD-?)?TVRip|TC|PPVRip|R5|VHSSCR|Bluray|WEB-?DL|WEB-?Rip|(?:DL|WEB|BD|BR)MUX\b`)
-	if err != nil {
-		log.Fatalln(err)
-	}
-	sourceTelesync, err = regexp.Compile("(?i)\b(?:HD-?)?T(?:ELE)?S(?:YNC)?\b")
-	if err != nil {
-		log.Fatalln(err)
-	}
-	sourceDvd, err = regexp.Compile("(?i)(DVD)(?:R[0-9])?")
-	if err != nil {
-		log.Fatalln(err)
-	}
+	sourceGeneral = regexp.MustCompile(`(?i)\b(?:(?:HD-?)?CAM|HD-?Rip|HDTV|BRRip|BDRip|DVDRip|DVDscr|(?:HD-?)?TVRip|TC|PPVRip|R5|VHSSCR|Bluray|WEB-?DL|WEB-?Rip|(?:DL|WEB|BD|BR)MUX)\b`)
+	sourceTelesync = regexp.MustCompile("(?i)\b(?:HD-?)?T(?:ELE)?S(?:YNC)?\b")
+	sourceDvd = regexp.MustCompile("(?i)(DVD)(?:R[0-9])?")
 }
 
 func (p *Parser) GetSource() string {

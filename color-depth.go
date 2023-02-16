@@ -1,7 +1,6 @@
 package torrentparser
 
 import (
-	"log"
 	"regexp"
 )
 
@@ -11,15 +10,8 @@ var (
 )
 
 func init() {
-	var err error
-	tenBit, err = regexp.Compile("(?i)10-?bit")
-	if err != nil {
-		log.Fatalln(err)
-	}
-	eightBit, err = regexp.Compile("(?i)8-?bit")
-	if err != nil {
-		log.Fatalln(err)
-	}
+	tenBit = regexp.MustCompile("(?i)10-?bit")
+	eightBit = regexp.MustCompile("(?i)8-?bit")
 }
 
 func (p *Parser) GetColorDepth() string {

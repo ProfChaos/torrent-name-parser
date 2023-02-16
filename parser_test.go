@@ -7,21 +7,43 @@ import (
 )
 
 func TestParser_Parse(t *testing.T) {
-	type fields struct {
-		Name            string
-		MatchedIndicies map[string]Index
-	}
 	tests := []struct {
 		name    string
-		fields  fields
 		want    Torrent
 		wantErr bool
 	}{
 		{
-			name: "blow-action.point.2018.1080p.bluray.x264.mp4",
-			fields: fields{
-				Name: "blow-action.point.2018.1080p.bluray.x264.mp4",
+			name: "blade.runner.2049.2017.2160p.uhd.bluray.x265-terminal.mkv",
+			want: Torrent{
+				Title:       "blade runner 2049",
+				Year:        2017,
+				Resolution:  "4k",
+				ContentType: Movie,
+				Season:      -1,
+				Group:       "terminal",
+				Container:   "mkv",
+				Source:      "bluray",
+				Codec:       "x265",
 			},
+		},
+		{
+			name: "Wonder.Woman.1984.2020.2160p.HMAX.WEB-DL.DDP5.1.Atmos.HDR.HEVC-TOMMY.mkv",
+			want: Torrent{
+				Title:       "Wonder Woman 1984",
+				Year:        2020,
+				Resolution:  "4k",
+				ContentType: Movie,
+				Season:      -1,
+				Group:       "TOMMY",
+				Container:   "mkv",
+				Hdr:         true,
+				Source:      "web-dl",
+				Codec:       "hevc",
+				Audio:       "atmos",
+			},
+		},
+		{
+			name: "blow-action.point.2018.1080p.bluray.x264.mp4",
 			want: Torrent{
 				Title:       "action point",
 				Resolution:  "1080p",
@@ -36,9 +58,6 @@ func TestParser_Parse(t *testing.T) {
 		},
 		{
 			name: "Frozen.2.2019.1080p.WEB-DL.H264.AC3-EVO.mp4",
-			fields: fields{
-				Name: "Frozen.2.2019.1080p.WEB-DL.H264.AC3-EVO.mp4",
-			},
 			want: Torrent{
 				Title:       "Frozen 2",
 				Resolution:  "1080p",
@@ -54,9 +73,6 @@ func TestParser_Parse(t *testing.T) {
 		},
 		{
 			name: "sons.of.anarchy.s05e10.480p.BluRay.x264-GAnGSteR",
-			fields: fields{
-				Name: "sons.of.anarchy.s05e10.480p.BluRay.x264-GAnGSteR",
-			},
 			want: Torrent{
 				Title:       "sons of anarchy",
 				Resolution:  "480p",
@@ -70,9 +86,6 @@ func TestParser_Parse(t *testing.T) {
 		},
 		{
 			name: "Color.Of.Night.Unrated.DC.VostFR.BRrip.x264",
-			fields: fields{
-				Name: "Color.Of.Night.Unrated.DC.VostFR.BRrip.x264",
-			},
 			want: Torrent{
 				Season:      -1,
 				Title:       "Color Of Night",
@@ -85,9 +98,6 @@ func TestParser_Parse(t *testing.T) {
 		},
 		{
 			name: "Da Vinci Code DVDRip",
-			fields: fields{
-				Name: "Da Vinci Code DVDRip",
-			},
 			want: Torrent{
 				Season:      -1,
 				Title:       "Da Vinci Code",
@@ -97,9 +107,6 @@ func TestParser_Parse(t *testing.T) {
 		},
 		{
 			name: "Some.girls.1998.DVDRip",
-			fields: fields{
-				Name: "Some.girls.1998.DVDRip",
-			},
 			want: Torrent{
 				Season:      -1,
 				Title:       "Some girls",
@@ -110,9 +117,6 @@ func TestParser_Parse(t *testing.T) {
 		},
 		{
 			name: "Ecrit.Dans.Le.Ciel.1954.MULTI.DVDRIP.x264.AC3-gismo65",
-			fields: fields{
-				Name: "Ecrit.Dans.Le.Ciel.1954.MULTI.DVDRIP.x264.AC3-gismo65",
-			},
 			want: Torrent{
 				Season:      -1,
 				Title:       "Ecrit Dans Le Ciel",
@@ -127,9 +131,6 @@ func TestParser_Parse(t *testing.T) {
 		},
 		{
 			name: "2019 After The Fall Of New York 1983 REMASTERED BDRip x264-GHOULS",
-			fields: fields{
-				Name: "2019 After The Fall Of New York 1983 REMASTERED BDRip x264-GHOULS",
-			},
 			want: Torrent{
 				Season:      -1,
 				Title:       "2019 After The Fall Of New York",
@@ -143,9 +144,6 @@ func TestParser_Parse(t *testing.T) {
 		},
 		{
 			name: "Ghost In The Shell 2017 720p HC HDRip X264 AC3-EVO",
-			fields: fields{
-				Name: "Ghost In The Shell 2017 720p HC HDRip X264 AC3-EVO",
-			},
 			want: Torrent{
 				Season:      -1,
 				Title:       "Ghost In The Shell",
@@ -161,9 +159,6 @@ func TestParser_Parse(t *testing.T) {
 		},
 		{
 			name: "Rogue One 2016 1080p BluRay x264-SPARKS",
-			fields: fields{
-				Name: "Rogue One 2016 1080p BluRay x264-SPARKS",
-			},
 			want: Torrent{
 				Season:      -1,
 				Title:       "Rogue One",
@@ -177,9 +172,6 @@ func TestParser_Parse(t *testing.T) {
 		},
 		{
 			name: "Desperation 2006 Multi Pal DvdR9-TBW1973",
-			fields: fields{
-				Name: "Desperation 2006 Multi Pal DvdR9-TBW1973",
-			},
 			want: Torrent{
 				Season:      -1,
 				Title:       "Desperation",
@@ -192,11 +184,9 @@ func TestParser_Parse(t *testing.T) {
 			},
 		},
 		{
-			name:   "Maman, j'ai raté l'avion 1990 VFI 1080p BluRay DTS x265-HTG",
-			fields: fields{Name: "Maman, j'ai raté l'avion 1990 VFI 1080p BluRay DTS x265-HTG"},
+			name: "Maman, j'ai raté l'avion 1990 VFI 1080p BluRay DTS x265-HTG",
 			want: Torrent{
-				Season: -1,
-
+				Season:      -1,
 				Title:       "Maman, j'ai raté l'avion",
 				Source:      "bluray",
 				Year:        1990,
@@ -210,9 +200,6 @@ func TestParser_Parse(t *testing.T) {
 		},
 		{
 			name: "[BlurayDesuYo] Shingeki no Kyojin (Season 3) 38 (BD 1920x1080 10bit FLAC) [619BE7E0].mkv",
-			fields: fields{
-				Name: "[BlurayDesuYo] Shingeki no Kyojin (Season 3) 38 (BD 1920x1080 10bit FLAC) [619BE7E0].mkv",
-			},
 			want: Torrent{
 				Title:       "Shingeki no Kyojin",
 				Audio:       "flac",
@@ -227,9 +214,6 @@ func TestParser_Parse(t *testing.T) {
 		},
 		{
 			name: "[Ohys-Raws] JoJo no Kimyou na Bouken Ougon no Kaze - 33 (BS11 1280x720 x264 AAC).mp4",
-			fields: fields{
-				Name: "[Ohys-Raws] JoJo no Kimyou na Bouken Ougon no Kaze - 33 (BS11 1280x720 x264 AAC).mp4",
-			},
 			want: Torrent{
 				Season:      -1,
 				Audio:       "aac",
@@ -244,9 +228,6 @@ func TestParser_Parse(t *testing.T) {
 		},
 		{
 			name: "[HorribleSubs] Boruto - Naruto Next Generations - 111 [720p].mkv",
-			fields: fields{
-				Name: "[HorribleSubs] Boruto - Naruto Next Generations - 111 [720p].mkv",
-			},
 			want: Torrent{
 				Season:      -1,
 				Container:   "mkv",
@@ -259,9 +240,6 @@ func TestParser_Parse(t *testing.T) {
 		},
 		{
 			name: "Marvels.Agents.of.S.H.I.E.L.D.S06E05.720p.HDTV.x264-AVS.mkv",
-			fields: fields{
-				Name: "Marvels.Agents.of.S.H.I.E.L.D.S06E05.720p.HDTV.x264-AVS.mkv",
-			},
 			want: Torrent{
 				Codec:       "x264",
 				Container:   "mkv",
@@ -276,9 +254,6 @@ func TestParser_Parse(t *testing.T) {
 		},
 		{
 			name: "stephen.colbert.2019.02.03.conan.obrien.web.x264-cookiemonster.mkv",
-			fields: fields{
-				Name: "stephen.colbert.2019.02.03.conan.obrien.web.x264-cookiemonster.mkv",
-			},
 			want: Torrent{
 				Season:      -1,
 				Codec:       "x264",
@@ -291,9 +266,6 @@ func TestParser_Parse(t *testing.T) {
 		},
 		{
 			name: "Star.Wars.Episode.IX.The.Rise.of.Skywalker.2019.2160p.WEB-DL.DDP5.1.Atmos.HEVC-BLUTONiUM.mkv",
-			fields: fields{
-				Name: "Star.Wars.Episode.IX.The.Rise.of.Skywalker.2019.2160p.WEB-DL.DDP5.1.Atmos.HEVC-BLUTONiUM.mkv",
-			},
 			want: Torrent{
 				Season:      -1,
 				Audio:       "atmos",
@@ -309,9 +281,6 @@ func TestParser_Parse(t *testing.T) {
 		},
 		{
 			name: "Star.Wars.Episode.7.The.Force.Awakens.2015.1080p.BluRay.DTS.x264.D-Z0N3",
-			fields: fields{
-				Name: "Star.Wars.Episode.7.The.Force.Awakens.2015.1080p.BluRay.DTS.x264.D-Z0N3",
-			},
 			want: Torrent{
 				Season:      -1,
 				Audio:       "dts",
@@ -326,9 +295,6 @@ func TestParser_Parse(t *testing.T) {
 		},
 		{
 			name: "Last.Week.Tonight.with.John.Oliver.S08E01.February.14.2021.720p.HMAX.WEB-DL.DD2.0.H.264-null.mkv",
-			fields: fields{
-				Name: "Last.Week.Tonight.with.John.Oliver.S08E01.February.14.2021.720p.HMAX.WEB-DL.DD2.0.H.264-null.mkv",
-			},
 			want: Torrent{
 				Codec:       "h264",
 				Container:   "mkv",
@@ -344,9 +310,6 @@ func TestParser_Parse(t *testing.T) {
 		},
 		{
 			name: "Pirates.of.the.Caribbean.Dead.Mans.Chest.2006.2160p.DSNP.WEB-DL.DTS-HD.MA.5.1.HDR.HEVC-WATCHER.mkv",
-			fields: fields{
-				Name: "Pirates.of.the.Caribbean.Dead.Mans.Chest.2006.2160p.DSNP.WEB-DL.DTS-HD.MA.5.1.HDR.HEVC-WATCHER.mkv",
-			},
 			want: Torrent{
 				Title:       "Pirates of the Caribbean Dead Mans Chest",
 				ContentType: Movie,
@@ -363,9 +326,6 @@ func TestParser_Parse(t *testing.T) {
 		},
 		{
 			name: "[SubsPlease] Boku no Hero Academia - 106 (720p) [F8EFA646].mkv",
-			fields: fields{
-				Name: "[SubsPlease] Boku no Hero Academia - 106 (720p) [F8EFA646].mkv",
-			},
 			want: Torrent{
 				Title:       "Boku no Hero Academia",
 				ContentType: TV,
@@ -378,9 +338,6 @@ func TestParser_Parse(t *testing.T) {
 		},
 		{
 			name: "Altered Carbon S01 2160p HDR Netflix WEBRip DD+ Atmos 5.1 x265-TrollUHD",
-			fields: fields{
-				Name: "Altered Carbon S01 2160p HDR Netflix WEBRip DD+ Atmos 5.1 x265-TrollUHD",
-			},
 			want: Torrent{
 				Title:       "Altered Carbon",
 				ContentType: TV,
@@ -396,11 +353,7 @@ func TestParser_Parse(t *testing.T) {
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			p := &Parser{
-				Name:            tt.fields.Name,
-				MatchedIndicies: map[string]Index{},
-				LowestIndex:     len(tt.fields.Name),
-			}
+			p := ParseName(tt.name)
 			got, err := p.Parse()
 			if (err != nil) != tt.wantErr {
 				t.Errorf("Parser.Parse() error = %v, wantErr %v", err, tt.wantErr)
@@ -411,4 +364,68 @@ func TestParser_Parse(t *testing.T) {
 			}
 		})
 	}
+}
+
+func TestContentType(t *testing.T) {
+	tests := []struct {
+		want string
+		is   ContentType
+	}{
+		{
+			want: "Movie",
+			is:   Movie,
+		},
+		{
+			want: "TV",
+			is:   TV,
+		},
+		{
+			want: "Unknown",
+			is:   Unknown,
+		},
+	}
+	for _, tt := range tests {
+		t.Run(tt.want, func(t *testing.T) {
+			if got := ContentType(tt.is); !reflect.DeepEqual(got.String(), tt.want) {
+				t.Errorf("ContentType() = %v, want %v", got, tt.want)
+			}
+		})
+	}
+}
+
+func TestTorrentScanAndValue(t *testing.T) {
+	var torrent Torrent
+
+	jsonStr := `{"title":"Pirates of the Caribbean Dead Mans Chest","alternativeTitle":"","contentType":0,"year":0,"resolution":"4k","extended":false,"unrated":false,"proper":false,"repack":false,"convert":false,"hardcoded":false,"retail":false,"remastered":false,"region":"","container":"mkv","source":"web-dl","codec":"hevc","audio":"dts-hd","group":"WATCHER","season":-1,"episode":0,"language":"","hdr":true,"colorDepth":"","date":""}`
+
+	err := torrent.Scan(jsonStr)
+	if err != nil {
+		t.Error(err)
+	}
+	if torrent.Title != "Pirates of the Caribbean Dead Mans Chest" {
+		t.Error("Title not parsed")
+	}
+
+	str, err := torrent.Value()
+	if err != nil {
+		t.Error(err)
+	}
+	fmt.Println(str)
+	if str != jsonStr {
+		t.Error("Value not parsed")
+	}
+
+	err = torrent.Scan([]byte(`{"title":"Rogue One A Star Wars Story","content_type":"movie","year":2016,"resolution":"1080p","container":"mkv","source":"bluray","codec":"x264","audio":"dts","group":"D-Z0N3","season":-1}`))
+	if err != nil {
+		t.Error(err)
+	}
+	if torrent.Title != "Rogue One A Star Wars Story" {
+		t.Error("Title not parsed")
+	}
+
+	err = torrent.Scan(1000)
+	if err == nil {
+		t.Error("Expected error")
+	}
+
 }

@@ -1,7 +1,6 @@
 package torrentparser
 
 import (
-	"log"
 	"regexp"
 )
 
@@ -17,39 +16,14 @@ var (
 )
 
 func init() {
-	var err error
-	seasonGeneral, err = regexp.Compile(`(?i)[^\w]S([0-9]{1,2})(?: ?E[0-9]{1,2})?`)
-	if err != nil {
-		log.Fatalln(err)
-	}
-	seasonSaison, err = regexp.Compile(`(?i)(?:\(?Saison|Season)[. _-]?([0-9]{1,2})`)
-	if err != nil {
-		log.Fatalln(err)
-	}
-	seasonX, err = regexp.Compile(`(?i)[^\d]+([0-9]{1,2})x[0-9]{1,2}[^\d]+`)
-	if err != nil {
-		log.Fatalln(err)
-	}
-	episodeGeneral, err = regexp.Compile("(?i)S[0-9]{1,2} ?E([0-9]{1,2})")
-	if err != nil {
-		log.Fatalln(err)
-	}
-	episodeSeason, err = regexp.Compile(`(?i)\(Season \d+\) ([0-9]{1,3})\s`)
-	if err != nil {
-		log.Fatalln(err)
-	}
-	episodeEpisode, err = regexp.Compile(`(?i)[ée]p(?:isode)?[. _-]?([0-9]{1,3})`)
-	if err != nil {
-		log.Fatalln(err)
-	}
-	episodeAnime, err = regexp.Compile(`(?i)- ([0-9]{1,3}) (?:\[|\()`)
-	if err != nil {
-		log.Fatalln(err)
-	}
-	episodeX, err = regexp.Compile("(?i)[0-9]{1,2}x([0-9]{1,2})")
-	if err != nil {
-		log.Fatalln(err)
-	}
+	seasonGeneral = regexp.MustCompile(`(?i)[^\w]S([0-9]{1,2})(?: ?E[0-9]{1,2})?`)
+	seasonSaison = regexp.MustCompile(`(?i)(?:\(?Saison|Season)[. _-]?([0-9]{1,2})`)
+	seasonX = regexp.MustCompile(`(?i)[^\d]+([0-9]{1,2})x[0-9]{1,2}[^\d]+`)
+	episodeGeneral = regexp.MustCompile("(?i)S[0-9]{1,2} ?E([0-9]{1,2})")
+	episodeSeason = regexp.MustCompile(`(?i)\(Season \d+\) ([0-9]{1,3})\s`)
+	episodeEpisode = regexp.MustCompile(`(?i)[ée]p(?:isode)?[. _-]?([0-9]{1,3})`)
+	episodeAnime = regexp.MustCompile(`(?i)- ([0-9]{1,3}) (?:\[|\()`)
+	episodeX = regexp.MustCompile("(?i)[0-9]{1,2}x([0-9]{1,2})")
 }
 
 func (p *Parser) GetSeason() int {

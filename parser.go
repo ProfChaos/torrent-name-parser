@@ -4,7 +4,6 @@ import (
 	"database/sql/driver"
 	"encoding/json"
 	"fmt"
-	"log"
 	"regexp"
 	"strconv"
 )
@@ -14,11 +13,7 @@ var (
 )
 
 func init() {
-	var err error
-	removeNonDigits, err = regexp.Compile("[^0-9]+")
-	if err != nil {
-		log.Fatalln(err)
-	}
+	removeNonDigits = regexp.MustCompile("[^0-9]+")
 }
 
 type ContentType int64
@@ -41,30 +36,31 @@ func (c ContentType) String() string {
 }
 
 type Torrent struct {
-	Title       string      `json:"title"`
-	ContentType ContentType `json:"contentType"`
-	Year        int         `json:"year"`
-	Resolution  string      `json:"resolution"`
-	Extended    bool        `json:"extended"`
-	Unrated     bool        `json:"unrated"`
-	Proper      bool        `json:"proper"`
-	Repack      bool        `json:"repack"`
-	Convert     bool        `json:"convert"`
-	Hardcoded   bool        `json:"hardcoded"`
-	Retail      bool        `json:"retail"`
-	Remastered  bool        `json:"remastered"`
-	Region      string      `json:"region"`
-	Container   string      `json:"container"`
-	Source      string      `json:"source"`
-	Codec       string      `json:"codec"`
-	Audio       string      `json:"audio"`
-	Group       string      `json:"group"`
-	Season      int         `json:"season"`
-	Episode     int         `json:"episode"`
-	Language    string      `json:"language"`
-	Hdr         bool        `json:"hdr"`
-	ColorDepth  string      `json:"colorDepth"`
-	Date        string      `json:"date"`
+	Title            string      `json:"title"`
+	AlternativeTitle string      `json:"alternativeTitle"`
+	ContentType      ContentType `json:"contentType"`
+	Year             int         `json:"year"`
+	Resolution       string      `json:"resolution"`
+	Extended         bool        `json:"extended"`
+	Unrated          bool        `json:"unrated"`
+	Proper           bool        `json:"proper"`
+	Repack           bool        `json:"repack"`
+	Convert          bool        `json:"convert"`
+	Hardcoded        bool        `json:"hardcoded"`
+	Retail           bool        `json:"retail"`
+	Remastered       bool        `json:"remastered"`
+	Region           string      `json:"region"`
+	Container        string      `json:"container"`
+	Source           string      `json:"source"`
+	Codec            string      `json:"codec"`
+	Audio            string      `json:"audio"`
+	Group            string      `json:"group"`
+	Season           int         `json:"season"`
+	Episode          int         `json:"episode"`
+	Language         string      `json:"language"`
+	Hdr              bool        `json:"hdr"`
+	ColorDepth       string      `json:"colorDepth"`
+	Date             string      `json:"date"`
 }
 
 func (t *Torrent) Scan(value interface{}) error {
@@ -74,7 +70,7 @@ func (t *Torrent) Scan(value interface{}) error {
 	case []byte:
 		return json.Unmarshal(v, t)
 	}
-	return nil
+	return fmt.Errorf("unsupported type: %T", value)
 }
 
 func (t Torrent) Value() (driver.Value, error) {
@@ -108,9 +104,10 @@ func (p *Parser) Parse() (Torrent, error) {
 		Season: -1,
 	}
 
+	torrent.Container = p.GetContainer()
+	torrent.Resolution = p.GetResolution()
 	torrent.Date = p.GetDate()
 	torrent.Year = p.GetYear()
-	torrent.Container = p.GetContainer()
 	torrent.Group = p.GetGroup()
 	torrent.Hardcoded = p.GetHardcoded()
 	torrent.Remastered = p.GetRemastered()
@@ -123,7 +120,6 @@ func (p *Parser) Parse() (Torrent, error) {
 	torrent.Unrated = p.GetUnrated()
 	torrent.Hdr = p.GetHdr()
 	torrent.ColorDepth = p.GetColorDepth()
-	torrent.Resolution = p.GetResolution()
 	torrent.Language = p.GetLanguage()
 
 	// Workaround for checking if episode is part of title
@@ -198,25 +194,9 @@ func (p *Parser) setLowestIndex(lowest int) {
 func (p *Parser) FindString(attr string, rx *regexp.Regexp, options FindStringOptions) string {
 	loc := rx.FindStringSubmatchIndex(p.Name)
 
-	if len(loc) == 0 {
+	name, returnNil := p.shouldReturnNil(attr, loc)
+	if returnNil {
 		return options.NilValue
-	}
-
-	if len(loc) == 4 && p.MatchedRange(loc[2], loc[3]) {
-		return options.NilValue
-	} else if len(loc) == 2 && p.MatchedRange(loc[0], loc[1]) {
-		return options.NilValue
-	}
-
-	p.setLowestIndex(loc[0])
-
-	var name string
-	if len(loc) == 4 {
-		p.AddMatchedIndex(attr, []int{loc[2], loc[3]})
-		name = p.Name[loc[2]:loc[3]]
-	} else {
-		p.AddMatchedIndex(attr, []int{loc[0], loc[1]})
-		name = p.Name[loc[0]:loc[1]]
 	}
 
 	if options.Value != "" {
@@ -237,28 +217,26 @@ type FindNumberOptions struct {
 	Cleaner  func(string) string
 }
 
+func (p *Parser) FindLastNumber(attr string, rx *regexp.Regexp, options FindNumberOptions) int {
+	locs := rx.FindAllStringSubmatchIndex(p.Name, -1)
+
+	if len(locs) == 0 {
+		return options.NilValue
+	}
+
+	return p.parseNumber(attr, locs[len(locs)-1], options)
+}
+
 func (p *Parser) FindNumber(attr string, rx *regexp.Regexp, options FindNumberOptions) int {
 	loc := rx.FindStringSubmatchIndex(p.Name)
 
-	if len(loc) == 0 {
-		return options.NilValue
-	}
+	return p.parseNumber(attr, loc, options)
+}
 
-	if len(loc) == 4 && p.MatchedRange(loc[2], loc[3]) {
+func (p *Parser) parseNumber(attr string, loc []int, options FindNumberOptions) int {
+	name, returnNil := p.shouldReturnNil(attr, loc)
+	if returnNil {
 		return options.NilValue
-	} else if len(loc) == 2 && p.MatchedRange(loc[0], loc[1]) {
-		return options.NilValue
-	}
-
-	p.setLowestIndex(loc[0])
-
-	var name string
-	if len(loc) == 4 {
-		name = p.Name[loc[2]:loc[3]]
-		p.AddMatchedIndex(attr, []int{loc[2], loc[3]})
-	} else {
-		name = p.Name[loc[0]:loc[1]]
-		p.AddMatchedIndex(attr, []int{loc[0], loc[1]})
 	}
 
 	if options.Value != 0 {
@@ -272,7 +250,7 @@ func (p *Parser) FindNumber(attr string, rx *regexp.Regexp, options FindNumberOp
 	number, err := strconv.Atoi(name)
 	if err != nil {
 		fmt.Println("FindNumber:", err)
-		return 0
+		return options.NilValue
 	}
 
 	if options.Handler != nil {
@@ -280,4 +258,29 @@ func (p *Parser) FindNumber(attr string, rx *regexp.Regexp, options FindNumberOp
 	}
 
 	return number
+}
+
+func (p *Parser) shouldReturnNil(name string, loc []int) (string, bool) {
+	if len(loc) == 0 {
+		return "", true
+	}
+
+	if len(loc) == 4 && p.MatchedRange(loc[2], loc[3]) {
+		return "", true
+	} else if len(loc) == 2 && p.MatchedRange(loc[0], loc[1]) {
+		return "", true
+	}
+
+	p.setLowestIndex(loc[0])
+
+	var match string
+	if len(loc) == 4 {
+		match = p.Name[loc[2]:loc[3]]
+		p.AddMatchedIndex(name, []int{loc[2], loc[3]})
+	} else {
+		match = p.Name[loc[0]:loc[1]]
+		p.AddMatchedIndex(name, []int{loc[0], loc[1]})
+	}
+
+	return match, false
 }

@@ -1,7 +1,6 @@
 package torrentparser
 
 import (
-	"log"
 	"regexp"
 	"strings"
 )
@@ -14,24 +13,10 @@ var (
 )
 
 func init() {
-	var err error
-	groupDZon3, err = regexp.Compile("(?i)D-Z0N3")
-	if err != nil {
-		log.Fatalln(err)
-	}
-	groupEnd, err = regexp.Compile(`(?i)- ?([^\-. ]+)(?:\.\w+)?$`)
-	if err != nil {
-		log.Fatalln(err)
-	}
-	groupStart, err = regexp.Compile(`(?i)^(\w+-)`)
-	if err != nil {
-		log.Fatalln(err)
-	}
-	groupBracketStart, err = regexp.Compile(`(?i)^(\[([^\]]+)\])`)
-	if err != nil {
-		log.Fatalln(err)
-	}
-
+	groupDZon3 = regexp.MustCompile("(?i)D-Z0N3")
+	groupEnd = regexp.MustCompile(`(?i)- ?([^\-. ]+)(?:\.\w+)?$`)
+	groupStart = regexp.MustCompile(`(?i)^(\w+-)`)
+	groupBracketStart = regexp.MustCompile(`(?i)^(\[([^\]]+)\])`)
 }
 
 func (p *Parser) GetGroup() string {

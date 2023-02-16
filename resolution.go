@@ -1,7 +1,6 @@
 package torrentparser
 
 import (
-	"log"
 	"regexp"
 	"strings"
 )
@@ -14,23 +13,10 @@ var (
 )
 
 func init() {
-	var err error
-	resolutionX, err = regexp.Compile("(?i)[0-9]{3,4}x([0-9]{3,4})")
-	if err != nil {
-		log.Fatalln(err)
-	}
-	resolution4k, err = regexp.Compile("(?i)(4k|2160p)")
-	if err != nil {
-		log.Fatalln(err)
-	}
-	resolution8k, err = regexp.Compile("(?i)(8k|4320p)")
-	if err != nil {
-		log.Fatalln(err)
-	}
-	resolutionGeneral, err = regexp.Compile("(?i)[0-9]{3,4}[pi]")
-	if err != nil {
-		log.Fatalln(err)
-	}
+	resolutionX = regexp.MustCompile("(?i)[0-9]{3,4}x([0-9]{3,4})")
+	resolution4k = regexp.MustCompile("(?i)(4k|2160p)")
+	resolution8k = regexp.MustCompile("(?i)(8k|4320p)")
+	resolutionGeneral = regexp.MustCompile("(?i)[0-9]{3,4}[pi]")
 }
 
 func (p *Parser) GetResolution() string {

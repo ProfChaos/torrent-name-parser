@@ -1,7 +1,6 @@
 package torrentparser
 
 import (
-	"log"
 	"regexp"
 )
 
@@ -15,32 +14,12 @@ var (
 )
 
 func init() {
-	var err error
-	unratedGeneral, err = regexp.Compile(`(?i)\bunrated|uncensored\b`)
-	if err != nil {
-		log.Fatalln(err)
-	}
-	remasterGeneral, err = regexp.Compile(`(?i)\bRemaster(?:ed)?\b`)
-	if err != nil {
-		log.Fatalln(err)
-	}
-	hardcodedGeneral, err = regexp.Compile(`(?i)\bHC|HARDCODED\b`)
-	if err != nil {
-		log.Fatalln(err)
-	}
-	regionGeneral, err = regexp.Compile(`(?i)dvd(R[0-9])`)
-	if err != nil {
-		log.Fatalln(err)
-	}
-	containerGeneral, err = regexp.Compile(`(?i)\.(MKV|AVI|MP4)$`)
-	if err != nil {
-		log.Fatalln(err)
-	}
-
-	hdrGeneral, err = regexp.Compile("(?i)hdr")
-	if err != nil {
-		log.Fatalln(err)
-	}
+	unratedGeneral = regexp.MustCompile(`(?i)\bunrated|uncensored\b`)
+	remasterGeneral = regexp.MustCompile(`(?i)\bRemaster(?:ed)?\b`)
+	hardcodedGeneral = regexp.MustCompile(`(?i)\bHC|HARDCODED\b`)
+	regionGeneral = regexp.MustCompile(`(?i)dvd(R[0-9])`)
+	containerGeneral = regexp.MustCompile(`(?i)\.(MKV|AVI|MP4)$`)
+	hdrGeneral = regexp.MustCompile("(?i)hdr")
 }
 
 func (p *Parser) GetUnrated() bool {
