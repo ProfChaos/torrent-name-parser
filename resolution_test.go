@@ -30,8 +30,8 @@ func TestParser_GetResolution(t *testing.T) {
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			p := ParseName(tt.name)
-			if got := p.GetResolution(); got != tt.want {
+			p, _ := ParseName(tt.name)
+			if got := p.Resolution; got != tt.want {
 				t.Errorf("Parser.GetResolution() = %v, want %v", got, tt.want)
 			}
 		})

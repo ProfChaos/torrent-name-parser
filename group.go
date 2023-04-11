@@ -19,7 +19,7 @@ func init() {
 	groupBracketStart = regexp.MustCompile(`(?i)^(\[([^\]]+)\])`)
 }
 
-func (p *Parser) GetGroup() string {
+func (p *parser) GetGroup() string {
 	group := p.FindString("group", groupDZon3, FindStringOptions{})
 	if group != "" {
 		return group

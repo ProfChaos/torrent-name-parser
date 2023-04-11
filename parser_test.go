@@ -353,8 +353,7 @@ func TestParser_Parse(t *testing.T) {
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			p := ParseName(tt.name)
-			got, err := p.Parse()
+			got, err := ParseName(tt.name)
 			if (err != nil) != tt.wantErr {
 				t.Errorf("Parser.Parse() error = %v, wantErr %v", err, tt.wantErr)
 				return

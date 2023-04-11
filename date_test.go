@@ -16,8 +16,8 @@ func TestParser_GetDate(t *testing.T) {
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			p := ParseName(tt.name)
-			if got := p.GetDate(); got != tt.want {
+			p, _ := ParseName(tt.name)
+			if got := p.Date; got != tt.want {
 				t.Errorf("Parser.GetDate() = %v, want %v", got, tt.want)
 			}
 		})
@@ -48,8 +48,8 @@ func TestParser_GetYear(t *testing.T) {
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			p := ParseName(tt.name)
-			if got := p.GetYear(); got != tt.want {
+			p, _ := ParseName(tt.name)
+			if got := p.Year; got != tt.want {
 				t.Errorf("Parser.GetYear() = %v, want %v", got, tt.want)
 			}
 		})

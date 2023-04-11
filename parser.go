@@ -82,24 +82,25 @@ func (t Torrent) Value() (driver.Value, error) {
 	return string(b), err
 }
 
-type Parser struct {
+type parser struct {
 	Name            string
-	MatchedIndicies map[string]Index
+	MatchedIndicies map[string]index
 	LowestIndex     int
 	LowestWasZero   bool
 }
 
-type Index struct {
+type index struct {
 	Name  string
 	Start int
 	End   int
 }
 
-func ParseName(name string) *Parser {
-	return &Parser{Name: name, MatchedIndicies: map[string]Index{}, LowestIndex: len(name)}
+func ParseName(name string) (Torrent, error) {
+	p := &parser{Name: name, MatchedIndicies: map[string]index{}, LowestIndex: len(name)}
+	return p.Parse()
 }
 
-func (p *Parser) Parse() (Torrent, error) {
+func (p *parser) Parse() (Torrent, error) {
 	torrent := Torrent{
 		Season: -1,
 	}
@@ -143,7 +144,7 @@ func (p *Parser) Parse() (Torrent, error) {
 	return torrent, nil
 }
 
-func (p *Parser) MatchedRange(start, end int) bool {
+func (p *parser) MatchedRange(start, end int) bool {
 	for _, aRange := range p.MatchedIndicies {
 		if start <= aRange.Start && end >= aRange.End {
 			return true
@@ -158,11 +159,11 @@ func (p *Parser) MatchedRange(start, end int) bool {
 	return false
 }
 
-func (p *Parser) AddMatchedIndex(attr string, loc []int) {
-	p.MatchedIndicies[attr] = Index{Name: attr, Start: loc[0], End: loc[1]}
+func (p *parser) AddMatchedIndex(attr string, loc []int) {
+	p.MatchedIndicies[attr] = index{Name: attr, Start: loc[0], End: loc[1]}
 }
 
-func (p *Parser) FindBoolean(attr string, rx *regexp.Regexp) bool {
+func (p *parser) FindBoolean(attr string, rx *regexp.Regexp) bool {
 	loc := rx.FindStringIndex(p.Name)
 
 	if len(loc) == 0 {
@@ -181,7 +182,7 @@ type FindStringOptions struct {
 	Handler  func(string) string
 }
 
-func (p *Parser) setLowestIndex(lowest int) {
+func (p *parser) setLowestIndex(lowest int) {
 	if lowest == 0 {
 		p.LowestWasZero = true
 		return
@@ -191,7 +192,7 @@ func (p *Parser) setLowestIndex(lowest int) {
 	}
 }
 
-func (p *Parser) FindString(attr string, rx *regexp.Regexp, options FindStringOptions) string {
+func (p *parser) FindString(attr string, rx *regexp.Regexp, options FindStringOptions) string {
 	loc := rx.FindStringSubmatchIndex(p.Name)
 
 	name, returnNil := p.shouldReturnNil(attr, loc)
@@ -217,7 +218,7 @@ type FindNumberOptions struct {
 	Cleaner  func(string) string
 }
 
-func (p *Parser) FindLastNumber(attr string, rx *regexp.Regexp, options FindNumberOptions) int {
+func (p *parser) FindLastNumber(attr string, rx *regexp.Regexp, options FindNumberOptions) int {
 	locs := rx.FindAllStringSubmatchIndex(p.Name, -1)
 
 	if len(locs) == 0 {
@@ -227,13 +228,13 @@ func (p *Parser) FindLastNumber(attr string, rx *regexp.Regexp, options FindNumb
 	return p.parseNumber(attr, locs[len(locs)-1], options)
 }
 
-func (p *Parser) FindNumber(attr string, rx *regexp.Regexp, options FindNumberOptions) int {
+func (p *parser) FindNumber(attr string, rx *regexp.Regexp, options FindNumberOptions) int {
 	loc := rx.FindStringSubmatchIndex(p.Name)
 
 	return p.parseNumber(attr, loc, options)
 }
 
-func (p *Parser) parseNumber(attr string, loc []int, options FindNumberOptions) int {
+func (p *parser) parseNumber(attr string, loc []int, options FindNumberOptions) int {
 	name, returnNil := p.shouldReturnNil(attr, loc)
 	if returnNil {
 		return options.NilValue
@@ -260,7 +261,7 @@ func (p *Parser) parseNumber(attr string, loc []int, options FindNumberOptions) 
 	return number
 }
 
-func (p *Parser) shouldReturnNil(name string, loc []int) (string, bool) {
+func (p *parser) shouldReturnNil(name string, loc []int) (string, bool) {
 	if len(loc) == 0 {
 		return "", true
 	}

@@ -22,26 +22,26 @@ func init() {
 	hdrGeneral = regexp.MustCompile("(?i)hdr")
 }
 
-func (p *Parser) GetUnrated() bool {
+func (p *parser) GetUnrated() bool {
 	return p.FindBoolean("unrated", unratedGeneral)
 }
 
-func (p *Parser) GetRemastered() bool {
+func (p *parser) GetRemastered() bool {
 	return p.FindBoolean("remaster", remasterGeneral)
 }
 
-func (p *Parser) GetHardcoded() bool {
+func (p *parser) GetHardcoded() bool {
 	return p.FindBoolean("hardcoded", hardcodedGeneral)
 }
 
-func (p *Parser) GetRegion() string {
+func (p *parser) GetRegion() string {
 	return p.FindString("region", regionGeneral, FindStringOptions{})
 }
 
-func (p *Parser) GetContainer() string {
+func (p *parser) GetContainer() string {
 	return p.FindString("container", containerGeneral, FindStringOptions{})
 }
 
-func (p *Parser) GetHdr() bool {
+func (p *parser) GetHdr() bool {
 	return p.FindBoolean("hdr", hdrGeneral)
 }

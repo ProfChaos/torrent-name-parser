@@ -42,8 +42,8 @@ func TestParser_GetGroup(t *testing.T) {
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			p := ParseName(tt.name)
-			if got := p.GetGroup(); got != tt.want {
+			p, _ := ParseName(tt.name)
+			if got := p.Group; got != tt.want {
 				t.Errorf("Parser.GetGroup() = %v, want %v", got, tt.want)
 			}
 		})

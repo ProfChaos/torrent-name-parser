@@ -36,8 +36,8 @@ func TestParser_GetSeason(t *testing.T) {
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			p := ParseName(tt.name)
-			if got := p.GetSeason(); got != tt.want {
+			p, _ := ParseName(tt.name)
+			if got := p.Season; got != tt.want {
 				t.Errorf("Parser.GetSeason() = %v, want %v", got, tt.want)
 			}
 		})
@@ -85,8 +85,8 @@ func TestParser_GetEpisode(t *testing.T) {
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			p := ParseName(tt.name)
-			if got := p.GetEpisode(); got != tt.want {
+			p, _ := ParseName(tt.name)
+			if got := p.Episode; got != tt.want {
 				t.Errorf("Parser.GetEpisode() = %v, want %v", got, tt.want)
 			}
 		})

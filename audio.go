@@ -19,7 +19,7 @@ func init() {
 	audioAac = regexp.MustCompile("(?i)AAC(?:[. ]?2[. ]0)?")
 }
 
-func (p *Parser) GetAudio() string {
+func (p *parser) GetAudio() string {
 	audio := p.FindString("audio", audioGeneral, FindStringOptions{Handler: func(resStr string) string {
 		return strings.ToLower(resStr)
 	}})

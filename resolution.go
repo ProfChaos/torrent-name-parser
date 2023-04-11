@@ -19,7 +19,7 @@ func init() {
 	resolutionGeneral = regexp.MustCompile("(?i)[0-9]{3,4}[pi]")
 }
 
-func (p *Parser) GetResolution() string {
+func (p *parser) GetResolution() string {
 	resolution := p.FindString("resolution", resolutionX, FindStringOptions{})
 	if resolution != "" {
 		return resolution

@@ -26,7 +26,7 @@ func init() {
 	episodeX = regexp.MustCompile("(?i)[0-9]{1,2}x([0-9]{1,2})")
 }
 
-func (p *Parser) GetSeason() int {
+func (p *parser) GetSeason() int {
 	season := p.FindNumber("seasonGeneral", seasonGeneral, FindNumberOptions{NilValue: -1})
 	if season != -1 {
 		return season
@@ -38,7 +38,7 @@ func (p *Parser) GetSeason() int {
 	return p.FindNumber("seasonX", seasonX, FindNumberOptions{NilValue: -1})
 }
 
-func (p *Parser) GetEpisode() int {
+func (p *parser) GetEpisode() int {
 	episode := p.FindNumber("episode", episodeGeneral, FindNumberOptions{})
 	if episode != 0 {
 		return episode

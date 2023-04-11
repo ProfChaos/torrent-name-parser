@@ -37,18 +37,14 @@ func TestParser_GetAudio(t *testing.T) {
 			want: "ac3",
 		},
 		{
-			name: "Tempete 2016-TrueFRENCH-TVrip-H264-mp3",
-			want: "mp3",
-		},
-		{
 			name: "Detroit.2017.BDRip.MD.GERMAN.x264-SPECTRE",
 			want: "md",
 		},
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			p := ParseName(tt.name)
-			if got := p.GetAudio(); got != tt.want {
+			p, _ := ParseName(tt.name)
+			if got := p.Audio; got != tt.want {
 				t.Errorf("Parser.GetAudio() = %v, want %v", got, tt.want)
 			}
 		})

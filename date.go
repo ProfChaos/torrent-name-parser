@@ -15,13 +15,13 @@ func init() {
 	dateYear = regexp.MustCompile(`(?i)\b(\d{4})\b`)
 }
 
-func (p *Parser) GetDate() string {
+func (p *parser) GetDate() string {
 	return p.FindString("date", dateDate, FindStringOptions{Handler: func(s string) string {
 		return strings.ReplaceAll(s, ".", "-")
 	}})
 }
 
-func (p *Parser) GetYear() int {
+func (p *parser) GetYear() int {
 	return p.FindLastNumber("year", dateYear, FindNumberOptions{
 		Cleaner: func(str string) string {
 			return removeNonDigits.ReplaceAllString(str, "")

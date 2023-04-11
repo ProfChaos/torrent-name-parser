@@ -4,7 +4,7 @@ import (
 	"strings"
 )
 
-func (p *Parser) GetTitle() string {
+func (p *parser) GetTitle() string {
 
 	title := ""
 	if p.LowestWasZero {

@@ -22,8 +22,8 @@ func TestParser_GetUnrated(t *testing.T) {
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			p := ParseName(tt.name)
-			if got := p.GetUnrated(); got != tt.want {
+			p, _ := ParseName(tt.name)
+			if got := p.Unrated; got != tt.want {
 				t.Errorf("Parser.GetUnrated() = %v, want %v", got, tt.want)
 			}
 		})
