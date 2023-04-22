@@ -12,7 +12,7 @@ var (
 )
 
 func init() {
-	sourceGeneral = regexp.MustCompile(`(?i)\b(?:(?:HD-?)?CAM|HD-?Rip|HDTV|BRRip|BDRip|DVDRip|DVDscr|(?:HD-?)?TVRip|TC|PPVRip|R5|VHSSCR|Blu-?ray|WEB-?DL|WEB-?Rip|(?:DL|WEB|BD|BR|BDRE|RE)MUX)|WEB\b`)
+	sourceGeneral = regexp.MustCompile(`(?i)\b(?:(?:HD-?)?CAM|(?:DVD|VHS)scr|TC|HDTV|R5|Blu-?ray|WEB-?(?:DL)?|(?:BR|BD|DVD|PPV|WEB|HD|(?:HD-?)?TV)-?Rip|(?:DL|WEB|BD|BR|BDRE|RE)MUX)\b`)
 	sourceTelesync = regexp.MustCompile("(?i)\b(?:HD-?)?T(?:ELE)?S(?:YNC)?\b")
 	sourceDvd = regexp.MustCompile("(?i)(DVD)(?:R[0-9])?")
 }
