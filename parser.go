@@ -121,7 +121,7 @@ func (p *parser) Parse() (Torrent, error) {
 	torrent.Unrated = p.GetUnrated()
 	torrent.Hdr = p.GetHdr()
 	torrent.ColorDepth = p.GetColorDepth()
-	torrent.Languages = p.GetLanguage()
+	torrent.Languages = p.GetLanguages()
 
 	// Workaround for checking if episode is part of title
 	yearIndex, yearOk := p.MatchedIndicies["year"]
