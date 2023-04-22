@@ -1,9 +1,10 @@
 package torrentparser
 
 import (
-	"fmt"
 	"reflect"
 	"testing"
+
+	"github.com/stretchr/testify/assert"
 )
 
 func TestParser_Parse(t *testing.T) {
@@ -90,7 +91,7 @@ func TestParser_Parse(t *testing.T) {
 				Season:      -1,
 				Title:       "Color Of Night",
 				Unrated:     true,
-				Language:    "vostfr",
+				Languages:   []string{"vostfr"},
 				Source:      "brrip",
 				Codec:       "x264",
 				ContentType: Movie,
@@ -122,7 +123,7 @@ func TestParser_Parse(t *testing.T) {
 				Title:       "Ecrit Dans Le Ciel",
 				Source:      "dvdrip",
 				Year:        1954,
-				Language:    "multi",
+				Languages:   []string{"multi"},
 				Codec:       "x264",
 				Audio:       "ac3",
 				Group:       "gismo65",
@@ -177,7 +178,7 @@ func TestParser_Parse(t *testing.T) {
 				Title:       "Desperation",
 				Source:      "dvd",
 				Year:        2006,
-				Language:    "multi",
+				Languages:   []string{"multi"},
 				Region:      "R9",
 				Group:       "TBW1973",
 				ContentType: Movie,
@@ -192,7 +193,7 @@ func TestParser_Parse(t *testing.T) {
 				Year:        1990,
 				Audio:       "dts",
 				Resolution:  "1080p",
-				Language:    "vfi",
+				Languages:   []string{"vfi"},
 				Codec:       "x265",
 				Group:       "HTG",
 				ContentType: Movie,
@@ -350,6 +351,20 @@ func TestParser_Parse(t *testing.T) {
 				Hdr:         true,
 			},
 		},
+		{
+			name: "The.Wizard.of.Oz.1939.4K.HDR.DV.2160p.BDRemux Ita Eng x265-NAHOM",
+			want: Torrent{
+				Title:       "The Wizard of Oz",
+				ContentType: Movie,
+				Year:        1939,
+				Resolution:  "4k",
+				Codec:       "x265",
+				Group:       "NAHOM",
+				Languages:   []string{"ita", "eng"},
+				Hdr:         true,
+				Season:      -1,
+			},
+		},
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
@@ -358,9 +373,7 @@ func TestParser_Parse(t *testing.T) {
 				t.Errorf("Parser.Parse() error = %v, wantErr %v", err, tt.wantErr)
 				return
 			}
-			if !reflect.DeepEqual(got, tt.want) {
-				t.Errorf("Parser.Parse() = %+v, want %+v", fmt.Sprintf("%+v+", got), fmt.Sprintf("%+v+", tt.want))
-			}
+			assert.Equal(t, tt.want, got)
 		})
 	}
 }
@@ -395,7 +408,7 @@ func TestContentType(t *testing.T) {
 func TestTorrentScanAndValue(t *testing.T) {
 	var torrent Torrent
 
-	jsonStr := `{"title":"Pirates of the Caribbean Dead Mans Chest","alternativeTitle":"","contentType":0,"year":0,"resolution":"4k","extended":false,"unrated":false,"proper":false,"repack":false,"convert":false,"hardcoded":false,"retail":false,"remastered":false,"region":"","container":"mkv","source":"web-dl","codec":"hevc","audio":"dts-hd","group":"WATCHER","season":-1,"episode":0,"language":"","hdr":true,"colorDepth":"","date":""}`
+	jsonStr := `{"title":"Pirates of the Caribbean Dead Mans Chest","alternativeTitle":"","contentType":0,"year":0,"resolution":"4k","extended":false,"unrated":false,"proper":false,"repack":false,"convert":false,"hardcoded":false,"retail":false,"remastered":false,"region":"","container":"mkv","source":"web-dl","codec":"hevc","audio":"dts-hd","group":"WATCHER","season":-1,"episode":0,"languages":null,"hdr":true,"colorDepth":"","date":""}`
 
 	err := torrent.Scan(jsonStr)
 	if err != nil {
@@ -409,10 +422,7 @@ func TestTorrentScanAndValue(t *testing.T) {
 	if err != nil {
 		t.Error(err)
 	}
-	fmt.Println(str)
-	if str != jsonStr {
-		t.Error("Value not parsed")
-	}
+	assert.Equal(t, jsonStr, str)
 
 	err = torrent.Scan([]byte(`{"title":"Rogue One A Star Wars Story","content_type":"movie","year":2016,"resolution":"1080p","container":"mkv","source":"bluray","codec":"x264","audio":"dts","group":"D-Z0N3","season":-1}`))
 	if err != nil {
