@@ -57,7 +57,7 @@ type Torrent struct {
 	Group            string      `json:"group"`
 	Season           int         `json:"season"`
 	Episode          int         `json:"episode"`
-	Language         string      `json:"language"`
+	Languages        []string    `json:"languages"`
 	Hdr              bool        `json:"hdr"`
 	ColorDepth       string      `json:"colorDepth"`
 	Date             string      `json:"date"`
@@ -121,7 +121,7 @@ func (p *parser) Parse() (Torrent, error) {
 	torrent.Unrated = p.GetUnrated()
 	torrent.Hdr = p.GetHdr()
 	torrent.ColorDepth = p.GetColorDepth()
-	torrent.Language = p.GetLanguage()
+	torrent.Languages = p.GetLanguage()
 
 	// Workaround for checking if episode is part of title
 	yearIndex, yearOk := p.MatchedIndicies["year"]
@@ -182,6 +182,11 @@ type FindStringOptions struct {
 	Handler  func(string) string
 }
 
+type FindStringsOptions struct {
+	NilValue []string
+	Handler  func([]string) []string
+}
+
 func (p *parser) setLowestIndex(lowest int) {
 	if lowest == 0 {
 		p.LowestWasZero = true
@@ -209,6 +214,21 @@ func (p *parser) FindString(attr string, rx *regexp.Regexp, options FindStringOp
 	}
 
 	return name
+}
+
+func (p *parser) FindStrings(attr string, rx *regexp.Regexp, options FindStringsOptions) []string {
+	locs := rx.FindAllStringSubmatchIndex(p.Name, -1)
+
+	vals, returnNil := p.shouldAllReturnNil(attr, locs)
+	if returnNil {
+		return options.NilValue
+	}
+
+	if options.Handler != nil {
+		return options.Handler(vals)
+	}
+
+	return vals
 }
 
 type FindNumberOptions struct {
@@ -284,4 +304,21 @@ func (p *parser) shouldReturnNil(name string, loc []int) (string, bool) {
 	}
 
 	return match, false
+}
+
+func (p *parser) shouldAllReturnNil(name string, locs [][]int) ([]string, bool) {
+	if len(locs) == 0 {
+		return nil, true
+	}
+
+	matches := make([]string, 0)
+	for _, loc := range locs {
+		match, returnNil := p.shouldReturnNil(name, loc)
+		if returnNil {
+			return nil, true
+		}
+		matches = append(matches, match)
+	}
+
+	return matches, false
 }
