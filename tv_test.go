@@ -2,6 +2,8 @@ package torrentparser
 
 import (
 	"testing"
+
+	"github.com/stretchr/testify/assert"
 )
 
 func TestParser_GetSeason(t *testing.T) {
@@ -33,6 +35,10 @@ func TestParser_GetSeason(t *testing.T) {
 			name: "[BlurayDesuYo] Shingeki no Kyojin (Season 3) 38 (BD 1920x1080 10bit FLAC) [619BE7E0].mkv",
 			want: 3,
 		},
+		{
+			name: "FakeShow.S01.1080p.BluRay.REMUX.AVC.DTS-HD.MA.5.1-NOGRP",
+			want: 1,
+		},
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
@@ -40,6 +46,69 @@ func TestParser_GetSeason(t *testing.T) {
 			if got := p.Season; got != tt.want {
 				t.Errorf("Parser.GetSeason() = %v, want %v", got, tt.want)
 			}
+		})
+	}
+}
+
+func TestParser_GetSeasonsNoEpisodes(t *testing.T) {
+	tests := []struct {
+		name string
+		want []int
+	}{
+		{
+			name: "Hero Mask S1 + S2 + Extras [npz][US BD REMUX, 1080p]",
+			want: []int{1, 2},
+		},
+		{
+			name: "Attack.on.Titan.S01.S02.S03.1080p.Blu-Ray.Remux.Dual-Audio.TrueHD",
+			want: []int{1, 2, 3},
+		},
+		{
+			name: "New.Game.S02.CR.WEB-DL.AAC2.0.x264-HorribleSubs",
+			want: []int{2},
+		},
+		{
+			name: "Black Hollywood: 'They've Gotta Have Us' S01 complete (BBC, 2018) (1280x720p HD, 50fps, soft Eng subs)",
+			want: []int{1},
+		},
+		{
+			name: "New.Girl.S07.Season.7.Complete.1080p.NF.WEB.x264-maximersk [mrsktv]",
+			want: []int{7},
+		},
+		// {
+		// 	name: "Game Of Thrones Complete Season 1,2,3,4,5,6,7 406p mkv + Subs",
+		// 	want: []int{1, 2, 3, 4, 5, 6, 7},
+		// },
+		// {
+		// 	name: "Futurama Season 1 2 3 4 5 6 7 + 4 Movies - threesixtyp",
+		// 	want: []int{1, 2, 3, 4, 5, 6, 7},
+		// },
+		// {
+		// 	name: "Black Lagoon (Seasons 1-2 + OVAs) (BD 1080p)(HEVC x265 10bit)(Dual-Audio)(Eng-Subs)-Judas[TGx]",
+		// 	want: []int{1, 2},
+		// },
+		// {
+		// 	name: "Justified - Season 1 to 6 - Mp4 x264 AC3 1080p",
+		// 	want: []int{1, 2, 3, 4, 5, 6},
+		// },
+		// {
+		// 	name: "Homeland.Season.1-4.Complete.720p.HDTV.X264-MRSK",
+		// 	want: []int{1, 2, 3, 4},
+		// },
+		// {
+		// 	name: "The Simpsons - Complete Seasons S01 to S28 (1080p, 720p, DVDRip)",
+		// 	want: []int{1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28},
+		// },
+		// {
+		// 	name: "Friends.Complete.Series.S01-S10.720p.BluRay.2CH.x265.HEVC-PSA",
+		// 	want: []int{1, 2, 3, 4, 5, 6, 7, 8, 9, 10},
+		// },
+	}
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			p, _ := ParseName(tt.name)
+			assert.Equal(t, 0, p.Episode, "expected no episodes to match")
+			assert.Equal(t, tt.want, p.Seasons)
 		})
 	}
 }

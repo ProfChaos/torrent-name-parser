@@ -78,6 +78,7 @@ func TestParser_Parse(t *testing.T) {
 				Title:       "sons of anarchy",
 				Resolution:  "480p",
 				Season:      5,
+				Seasons:     []int{5},
 				Episode:     10,
 				Source:      "bluray",
 				Codec:       "x264",
@@ -208,6 +209,7 @@ func TestParser_Parse(t *testing.T) {
 				Container:   "mkv",
 				Group:       "BlurayDesuYo",
 				Season:      3,
+				Seasons:     []int{3},
 				Episode:     38,
 				ColorDepth:  "10-bit",
 				ContentType: TV,
@@ -248,6 +250,7 @@ func TestParser_Parse(t *testing.T) {
 				Group:       "AVS",
 				Resolution:  "720p",
 				Season:      6,
+				Seasons:     []int{6},
 				Source:      "hdtv",
 				Title:       "Marvels Agents of S H I E L D",
 				ContentType: TV,
@@ -303,6 +306,7 @@ func TestParser_Parse(t *testing.T) {
 				Resolution:  "720p",
 				Episode:     1,
 				Season:      8,
+				Seasons:     []int{8},
 				Source:      "web-dl",
 				Title:       "Last Week Tonight with John Oliver",
 				ContentType: TV,
@@ -348,6 +352,7 @@ func TestParser_Parse(t *testing.T) {
 				Codec:       "x265",
 				Audio:       "atmos",
 				Season:      1,
+				Seasons:     []int{1},
 				Hdr:         true,
 			},
 		},
@@ -408,7 +413,7 @@ func TestContentType(t *testing.T) {
 func TestTorrentScanAndValue(t *testing.T) {
 	var torrent Torrent
 
-	jsonStr := `{"title":"Pirates of the Caribbean Dead Mans Chest","alternativeTitle":"","contentType":0,"year":0,"resolution":"4k","extended":false,"unrated":false,"proper":false,"repack":false,"convert":false,"hardcoded":false,"retail":false,"remastered":false,"region":"","container":"mkv","source":"web-dl","codec":"hevc","audio":"dts-hd","group":"WATCHER","season":-1,"episode":0,"languages":null,"hdr":true,"colorDepth":"","date":""}`
+	jsonStr := `{"title":"Pirates of the Caribbean Dead Mans Chest","alternativeTitle":"","contentType":0,"year":0,"resolution":"4k","extended":false,"unrated":false,"proper":false,"repack":false,"convert":false,"hardcoded":false,"retail":false,"remastered":false,"region":"","container":"mkv","source":"web-dl","codec":"hevc","audio":"dts-hd","group":"WATCHER","season":-1,"seasons":null,"episode":0,"languages":null,"hdr":true,"colorDepth":"","date":""}`
 
 	err := torrent.Scan(jsonStr)
 	if err != nil {

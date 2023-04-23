@@ -56,6 +56,7 @@ type Torrent struct {
 	Audio            string      `json:"audio"`
 	Group            string      `json:"group"`
 	Season           int         `json:"season"`
+	Seasons          []int       `json:"seasons"`
 	Episode          int         `json:"episode"`
 	Languages        []string    `json:"languages"`
 	Hdr              bool        `json:"hdr"`
@@ -116,7 +117,10 @@ func (p *parser) Parse() (Torrent, error) {
 	torrent.Source = p.GetSource()
 	torrent.Codec = p.GetCodec()
 	torrent.Audio = p.GetAudio()
-	torrent.Season = p.GetSeason()
+	torrent.Seasons = p.GetSeasons()
+	if len(torrent.Seasons) == 1 {
+		torrent.Season = torrent.Seasons[0]
+	}
 	torrent.Episode = p.GetEpisode()
 	torrent.Unrated = p.GetUnrated()
 	torrent.Hdr = p.GetHdr()
@@ -279,6 +283,62 @@ func (p *parser) parseNumber(attr string, loc []int, options FindNumberOptions) 
 	}
 
 	return number
+}
+
+type FindNumbersOptions struct {
+	Value    []int
+	NilValue []int
+	Handler  func([]int) []int
+}
+
+func (p *parser) FindNumbers(attr string, rx *regexp.Regexp, options FindNumbersOptions) []int {
+	locs := rx.FindAllStringSubmatchIndex(p.Name, -1)
+
+	return p.parseNumbers(attr, locs, options)
+
+	// dedupe := make(map[int]bool)
+	// nums := make([]int, 0) // preserve the order they were found
+	// for _, loc := range locs {
+	// 	num := p.parseNumber(attr, loc, options)
+	// 	if _, ok := dedupe[num]; !ok {
+	// 		dedupe[num] = true
+	// 		nums = append(nums, num)
+	// 	}
+	// }
+
+	// fmt.Printf("found nums: %v\n\n", nums)
+
+	// if len(nums) == 0 {
+	// 	return nil
+	// }
+	// return nums
+}
+
+func (p *parser) parseNumbers(attr string, loc [][]int, options FindNumbersOptions) []int {
+	names, returnNil := p.shouldAllReturnNil(attr, loc)
+	if returnNil {
+		return options.NilValue
+	}
+
+	if options.Value != nil {
+		return options.Value
+	}
+
+	numbers := make([]int, len(names))
+	for i, n := range names {
+		number, err := strconv.Atoi(n)
+		if err != nil {
+			fmt.Println("FindNumber:", err)
+			return options.NilValue
+		}
+		numbers[i] = number
+	}
+
+	if options.Handler != nil {
+		return options.Handler(numbers)
+	}
+
+	return numbers
 }
 
 func (p *parser) shouldReturnNil(name string, loc []int) (string, bool) {
