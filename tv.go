@@ -1,6 +1,7 @@
 package torrentparser
 
 import (
+	"fmt"
 	"regexp"
 )
 
@@ -23,11 +24,11 @@ var (
 )
 
 func init() {
-	// Season ranges (ie, S01-S03)
-	//seasonRange1 = regexp.MustCompile(`(?i)(?:complete\W|seasons?\W|\W|^)((?:s\d{1,2}[., +/\\&-]+)+s\d{1,2}\b)`)
+	// Season ranges (ie, S01-S03) - must have two capture groups to denote the start and end of the range
+	seasonRange1 = regexp.MustCompile(`(?i)(?:complete\W|(?:seasons|series)?\W|\W|^)(?:s(\d{1,2})[, +/\\&-]+)+s(\d{1,2})\b`)
 	//seasonRange2 = regexp.MustCompile(`(?i)(?:complete\W|seasons?\W|\W|^)[([]?(s\d{2,}-\d{2,}\b)[)\]]?`)
 	//seasonRange3 = regexp.MustCompile(`(?i)(?:complete\W|seasons?\W|\W|^)[([]?(s[1-9]-[2-9]\b)[)\]]?`)
-	//seasonRange4 = regexp.MustCompile(`(?i)(?:(?:\bthe\W)?\bcomplete\W)?(?:seasons?|[Сс]езони?|temporadas?)[. ]?[-:]?[. ]?[([]?((?:\d{1,2}[., /\\&]+)+\d{1,2}\b)[)\]]?`)
+	seasonRange4 = regexp.MustCompile(`(?i)(?:(?:\bthe\W)?\bcomplete\W)?(?:seasons?|[Сс]езони?|temporadas?)[. ]?[-:]?[. ]?[([]?(?:(?:(\d{1,2})[., /\\&-]+)+(\d{1,2})\b)[)\]]?`)
 	//seasonRange5 = regexp.MustCompile(`(?i)(?:(?:\bthe\W)?\bcomplete\W)?(?:seasons|[Сс]езони?|temporadas?)[. ]?[-:]?[. ]?[([]?((?:\d{1,2}[. -]+)+[1-9]\d?\b)[)\]]?`)
 	//seasonRange6 = regexp.MustCompile(`(?i)(?:(?:\bthe\W)?\bcomplete\W)?season[. ]?[([]?((?:\d{1,2}[. -]+)+[1-9]\d?\b)[)\]]?(!.*\.\w{2,4}$)`)
 	seasonRange7 = regexp.MustCompile(`(?i)(?:(?:\bthe\W)?\bcomplete\W)?\bseasons?\b[. -]?S?(\d{1,2})[. -]?(?:to|thru|and|\+|:)[. -]?(?:s?)(\d{1,2})\b`) // two capture groups
@@ -55,17 +56,15 @@ func (p *parser) GetSeason() int {
 }
 
 func (p *parser) GetSeasons() []int {
-	// Identify season ranges before individually defined seasons/single seasons
-	//fmt.Printf("parsing: %s\n", p.Name)
-	//for _, seasonRangeRX := range []*regexp.Regexp{seasonRange1, seasonRange2, seasonRange3, seasonRange4, seasonRange5, seasonRange6, seasonRange7} {
-	// for _, seasonRangeRX := range []*regexp.Regexp{seasonRange7} {
-	// 	seasons := p.FindNumbers("seasonRange", seasonRangeRX, FindNumberOptions{})
-	// 	if seasons != nil {
-	// 		fmt.Printf("Found season range: %v\n", seasons)
-	// 		return seasons
-	// 	}
-	// 	//res := seasonRangeRX.FindAllStringSubmatchIndex(p.Name, -1)
-	// }
+	// Try identify season ranges before individually defined seasons/single seasons
+	fmt.Printf("parsing: %s\n", p.Name)
+	for idx, seasonRangeRX := range []*regexp.Regexp{seasonRange1, seasonRange4, seasonRange7} {
+		seasons := p.FindNumbers("seasonRange", seasonRangeRX, FindNumbersOptions{})
+		if seasons != nil && seasons[1] > seasons[0] {
+			fmt.Printf("matched in season range on regex %d\n", idx)
+			return intRange(seasons[0], seasons[1])
+		}
+	}
 
 	season := p.FindNumbers("seasonGeneral", seasonGeneral, FindNumbersOptions{NilValue: nil})
 	if season != nil {
@@ -96,4 +95,13 @@ func (p *parser) GetEpisode() int {
 		return episode
 	}
 	return p.FindNumber("episode", episodeX, FindNumberOptions{})
+}
+
+// intRange returns a slice of integers from s to e inclusive.
+func intRange(s, e int) []int {
+	var r []int
+	for i := s; i <= e; i++ {
+		r = append(r, i)
+	}
+	return r
 }

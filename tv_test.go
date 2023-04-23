@@ -75,6 +75,26 @@ func TestParser_GetSeasonsNoEpisodes(t *testing.T) {
 			name: "New.Girl.S07.Season.7.Complete.1080p.NF.WEB.x264-maximersk [mrsktv]",
 			want: []int{7},
 		},
+		{
+			name: "Justified - Season 1 to 6 - Mp4 x264 AC3 1080p",
+			want: []int{1, 2, 3, 4, 5, 6},
+		},
+		{
+			name: "The Simpsons - Complete Seasons S01 to S28 (1080p, 720p, DVDRip)",
+			want: []int{1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28},
+		},
+		{
+			name: "Friends.Complete.Series.S01-S10.720p.BluRay.2CH.x265.HEVC-PSA",
+			want: []int{1, 2, 3, 4, 5, 6, 7, 8, 9, 10},
+		},
+		{
+			name: "Homeland.Season.1-4.Complete.720p.HDTV.X264-MRSK",
+			want: []int{1, 2, 3, 4},
+		},
+		{
+			name: "Black Lagoon (Seasons 1-2 + OVAs) (BD 1080p)(HEVC x265 10bit)(Dual-Audio)(Eng-Subs)-Judas[TGx]",
+			want: []int{1, 2},
+		},
 		// {
 		// 	name: "Game Of Thrones Complete Season 1,2,3,4,5,6,7 406p mkv + Subs",
 		// 	want: []int{1, 2, 3, 4, 5, 6, 7},
@@ -82,26 +102,6 @@ func TestParser_GetSeasonsNoEpisodes(t *testing.T) {
 		// {
 		// 	name: "Futurama Season 1 2 3 4 5 6 7 + 4 Movies - threesixtyp",
 		// 	want: []int{1, 2, 3, 4, 5, 6, 7},
-		// },
-		// {
-		// 	name: "Black Lagoon (Seasons 1-2 + OVAs) (BD 1080p)(HEVC x265 10bit)(Dual-Audio)(Eng-Subs)-Judas[TGx]",
-		// 	want: []int{1, 2},
-		// },
-		// {
-		// 	name: "Justified - Season 1 to 6 - Mp4 x264 AC3 1080p",
-		// 	want: []int{1, 2, 3, 4, 5, 6},
-		// },
-		// {
-		// 	name: "Homeland.Season.1-4.Complete.720p.HDTV.X264-MRSK",
-		// 	want: []int{1, 2, 3, 4},
-		// },
-		// {
-		// 	name: "The Simpsons - Complete Seasons S01 to S28 (1080p, 720p, DVDRip)",
-		// 	want: []int{1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28},
-		// },
-		// {
-		// 	name: "Friends.Complete.Series.S01-S10.720p.BluRay.2CH.x265.HEVC-PSA",
-		// 	want: []int{1, 2, 3, 4, 5, 6, 7, 8, 9, 10},
 		// },
 	}
 	for _, tt := range tests {
