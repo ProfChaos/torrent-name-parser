@@ -137,11 +137,7 @@ func (p *parser) Parse() (Torrent, error) {
 	}
 
 	// LAST
-	titles := p.GetTitles()
-	torrent.Title = titles[0]
-	if len(titles) > 1 {
-		torrent.AlternativeTitle = titles[1]
-	}
+	torrent.Title, torrent.AlternativeTitle = p.GetTitles()
 
 	if torrent.Episode > 0 || torrent.Date != "" || torrent.Season > -1 {
 		torrent.ContentType = TV
