@@ -1,53 +1,43 @@
 package torrentparser
 
-import "testing"
+import (
+	"testing"
+
+	"github.com/stretchr/testify/assert"
+)
 
 func TestParser_GetTitle(t *testing.T) {
-	type fields struct {
-		Name            string
-		MatchedIndicies map[string]index
-		LowestWasZero   bool
-		LowestIndex     int
-	}
+
 	tests := []struct {
-		name   string
-		fields fields
-		want   string
+		name string
+		want []string
 	}{
 		{
 			name: "[HorribleSubs] Boruto - Naruto Next Generations - 85 [720p].mkv",
-			fields: fields{
-				Name:          "[HorribleSubs] Boruto - Naruto Next Generations - 85 [720p].mkv",
-				LowestIndex:   48,
-				LowestWasZero: true,
-				MatchedIndicies: map[string]index{
-					"test":  {Name: "TitleTest", Start: 0, End: 15},
-					"test2": {Name: "TitleTest", Start: 48, End: 56},
-				},
-			},
-			want: "Boruto - Naruto Next Generations",
+			want: []string{"Boruto - Naruto Next Generations"},
 		},
 		{
 			name: "American.Dad.S17E17.720p.WEBRip.x264-BAE.mkv",
-			fields: fields{
-				Name:            "American.Dad.S17E17.720p.WEBRip.x264-BAE.mkv",
-				LowestIndex:     13,
-				MatchedIndicies: map[string]index{"test": {Name: "TitleTest", Start: 13, End: 18}},
-			},
-			want: "American Dad",
+			want: []string{"American Dad"},
+		},
+		{
+			name: "En.Affare.AKA.An.Affair.2018.1080p.BluRay.x264-HANDJOB.mkv",
+			want: []string{"En Affare", "An Affair"},
+		},
+		{
+			name: "Utøya 22. juli AKA U - 22 july [2018].mp4",
+			want: []string{"Utøya 22 juli", "U - 22 july"},
 		},
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			p := &parser{
-				Name:            tt.fields.Name,
-				MatchedIndicies: tt.fields.MatchedIndicies,
-				LowestIndex:     tt.fields.LowestIndex,
-				LowestWasZero:   tt.fields.LowestWasZero,
+			p, _ := ParseName(tt.name)
+			titles := []string{p.Title}
+			if p.AlternativeTitle != "" {
+				titles = append(titles, p.AlternativeTitle)
 			}
-			if got := p.GetTitle(); got != tt.want {
-				t.Errorf("Parser.GetTitle() = %v, want %v", got, tt.want)
-			}
+
+			assert.Equal(t, tt.want, titles)
 		})
 	}
 }

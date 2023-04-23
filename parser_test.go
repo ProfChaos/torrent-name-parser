@@ -367,6 +367,21 @@ func TestParser_Parse(t *testing.T) {
 				Season:      -1,
 			},
 		},
+		{
+			name: "Sicario 2015 PROPER 1080p BluRay DD-EX x264-TayTO.mp4",
+			want: Torrent{
+				Title:       "Sicario",
+				ContentType: Movie,
+				Year:        2015,
+				Resolution:  "1080p",
+				Codec:       "x264",
+				Group:       "TayTO",
+				Source:      "bluray",
+				Season:      -1,
+				Proper:      true,
+				Container:   "mp4",
+			},
+		},
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {

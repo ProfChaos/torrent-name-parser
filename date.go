@@ -12,7 +12,7 @@ var (
 
 func init() {
 	dateDate = regexp.MustCompile("(?i)[0-9]{4}.[0-9]{2}.[0-9]{2}")
-	dateYear = regexp.MustCompile(`(?i)\b(\d{4})\b`)
+	dateYear = regexp.MustCompile(`(?i)(?:\[|\b)(\d{4})(?:\]|\b)`)
 }
 
 func (p *parser) GetDate() string {
