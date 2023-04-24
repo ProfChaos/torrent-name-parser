@@ -23,7 +23,7 @@ func init() {
 	hardcodedGeneral = regexp.MustCompile(`(?i)\bHC|HARDCODED\b`)
 	regionGeneral = regexp.MustCompile(`(?i)dvd(R[0-9])`)
 	containerGeneral = regexp.MustCompile(`(?i)\.(MKV|AVI|MP4)$`)
-	hdrGeneral = regexp.MustCompile("(?i)hdr")
+	hdrGeneral = regexp.MustCompile("(?i)hdr(?:10)?|dv")
 	repackGeneral = regexp.MustCompile("(?i)repack|rerip")
 	extendedGeneral = regexp.MustCompile("(?i)extended")
 	properGeneral = regexp.MustCompile("(?i)proper")
@@ -50,8 +50,8 @@ func (p *parser) GetContainer() string {
 	return p.FindString("container", containerGeneral, FindStringOptions{})
 }
 
-func (p *parser) GetHdr() bool {
-	return p.FindBoolean("hdr", hdrGeneral)
+func (p *parser) GetHdr() []string {
+	return p.FindStrings("hdr", hdrGeneral, FindStringsOptions{})
 }
 
 func (p *parser) Repack() bool {
