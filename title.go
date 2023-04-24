@@ -1,10 +1,19 @@
 package torrentparser
 
 import (
+	"regexp"
 	"strings"
 )
 
-func (p *parser) GetTitle() string {
+var (
+	akaTitle *regexp.Regexp
+)
+
+func init() {
+	akaTitle = regexp.MustCompile(`(?i)(?:aka)(.+)`)
+}
+
+func (p *parser) GetTitles() (string, string) {
 
 	title := ""
 	if p.LowestWasZero {
@@ -24,7 +33,15 @@ func (p *parser) GetTitle() string {
 	} else {
 		title = p.Name[0:p.LowestIndex]
 	}
+
 	title = strings.ReplaceAll(title, ".", " ")
+	title = strings.ReplaceAll(title, "  ", " ")
 	title = strings.Trim(title, " ")
-	return title
+
+	loc := akaTitle.FindStringSubmatchIndex(title)
+	if len(loc) > 3 {
+		return strings.Trim(title[0:loc[0]], " "), strings.Trim(title[loc[2]:], " ")
+	}
+
+	return title, ""
 }

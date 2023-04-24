@@ -107,6 +107,10 @@ func (p *parser) Parse() (Torrent, error) {
 	}
 
 	torrent.Container = p.GetContainer()
+	torrent.Extended = p.Extended()
+	torrent.Repack = p.Repack()
+	torrent.Proper = p.Proper()
+	torrent.Convert = p.Convert()
 	torrent.Resolution = p.GetResolution()
 	torrent.Date = p.GetDate()
 	torrent.Year = p.GetYear()
@@ -137,7 +141,7 @@ func (p *parser) Parse() (Torrent, error) {
 	}
 
 	// LAST
-	torrent.Title = p.GetTitle()
+	torrent.Title, torrent.AlternativeTitle = p.GetTitles()
 
 	if torrent.Episode > 0 || torrent.Date != "" || torrent.Season > -1 {
 		torrent.ContentType = TV
