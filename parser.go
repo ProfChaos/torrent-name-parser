@@ -294,42 +294,18 @@ func (p *parser) parseNumber(attr string, loc []int, options FindNumberOptions) 
 }
 
 type FindNumbersOptions struct {
-	Value    []int
 	NilValue []int
-	Handler  func([]int) []int
 }
 
 func (p *parser) FindNumbers(attr string, rx *regexp.Regexp, options FindNumbersOptions) []int {
 	locs := rx.FindAllStringSubmatchIndex(p.Name, -1)
-	fmt.Printf("found locs: %v\n", locs)
 	return p.parseNumbers(attr, locs, options)
-
-	// dedupe := make(map[int]bool)
-	// nums := make([]int, 0) // preserve the order they were found
-	// for _, loc := range locs {
-	// 	num := p.parseNumber(attr, loc, options)
-	// 	if _, ok := dedupe[num]; !ok {
-	// 		dedupe[num] = true
-	// 		nums = append(nums, num)
-	// 	}
-	// }
-
-	// fmt.Printf("found nums: %v\n\n", nums)
-
-	// if len(nums) == 0 {
-	// 	return nil
-	// }
-	// return nums
 }
 
 func (p *parser) parseNumbers(attr string, loc [][]int, options FindNumbersOptions) []int {
 	names, returnNil := p.shouldAllReturnNil(attr, loc)
 	if returnNil {
 		return options.NilValue
-	}
-
-	if options.Value != nil {
-		return options.Value
 	}
 
 	numbers := make([]int, len(names))
@@ -340,10 +316,6 @@ func (p *parser) parseNumbers(attr string, loc [][]int, options FindNumbersOptio
 			return options.NilValue
 		}
 		numbers[i] = number
-	}
-
-	if options.Handler != nil {
-		return options.Handler(numbers)
 	}
 
 	return numbers
@@ -368,7 +340,6 @@ func (p *parser) shouldReturnNil(name string, loc []int) ([]string, bool) {
 	if len(loc) == 6 {
 		matches = append(matches, p.Name[loc[2]:loc[3]], p.Name[loc[4]:loc[5]])
 		p.AddMatchedIndex(name, []int{loc[2], loc[5]})
-		fmt.Printf("DEBUG: %s\n", matches)
 	} else if len(loc) == 4 {
 		matches = append(matches, p.Name[loc[2]:loc[3]])
 		p.AddMatchedIndex(name, []int{loc[2], loc[3]})

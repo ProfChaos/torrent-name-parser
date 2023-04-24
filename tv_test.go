@@ -95,14 +95,34 @@ func TestParser_GetSeasonsNoEpisodes(t *testing.T) {
 			name: "Black Lagoon (Seasons 1-2 + OVAs) (BD 1080p)(HEVC x265 10bit)(Dual-Audio)(Eng-Subs)-Judas[TGx]",
 			want: []int{1, 2},
 		},
-		// {
-		// 	name: "Game Of Thrones Complete Season 1,2,3,4,5,6,7 406p mkv + Subs",
-		// 	want: []int{1, 2, 3, 4, 5, 6, 7},
-		// },
-		// {
-		// 	name: "Futurama Season 1 2 3 4 5 6 7 + 4 Movies - threesixtyp",
-		// 	want: []int{1, 2, 3, 4, 5, 6, 7},
-		// },
+		{
+			name: "Game Of Thrones Complete Season 1,2,3,4,5,6,7 406p mkv + Subs",
+			want: []int{1, 2, 3, 4, 5, 6, 7},
+		},
+		{
+			name: "Futurama Season 1 2 3 4 5 6 7 + 4 Movies - threesixtyp",
+			want: []int{1, 2, 3, 4, 5, 6, 7},
+		},
+		{
+			name: "Breaking Bad Complete Season 1 , 2 , 3, 4 ,5 ,1080p HEVC",
+			want: []int{1, 2, 3, 4, 5},
+		},
+		{
+			name: "True Blood Season 1, 2, 3, 4, 5 & 6 + Extras BDRip TSV",
+			want: []int{1, 2, 3, 4, 5, 6},
+		},
+		{
+			name: "The Simpsons Season 20 21 22 23 24 25 26 27 - threesixtyp",
+			want: []int{20, 21, 22, 23, 24, 25, 26, 27},
+		},
+		{
+			name: "Perdidos: Lost: Castellano: Temporadas 1 2 3 4 5 6 (Serie Com",
+			want: []int{1, 2, 3, 4, 5, 6},
+		},
+		{
+			name: "The Boondocks Season 1, 2 & 3",
+			want: []int{1, 2, 3},
+		},
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
