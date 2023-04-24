@@ -40,7 +40,7 @@ func TestParser_Parse(t *testing.T) {
 				Hdr:         true,
 				Source:      "web-dl",
 				Codec:       "hevc",
-				Audio:       "atmos",
+				Audio:       "DDP5.1 Atmos",
 			},
 		},
 		{
@@ -270,7 +270,7 @@ func TestParser_Parse(t *testing.T) {
 			name: "Star.Wars.Episode.IX.The.Rise.of.Skywalker.2019.2160p.WEB-DL.DDP5.1.Atmos.HEVC-BLUTONiUM.mkv",
 			want: Torrent{
 				Season:      -1,
-				Audio:       "atmos",
+				Audio:       "DDP5.1 Atmos",
 				Codec:       "hevc",
 				Year:        2019,
 				Container:   "mkv",
@@ -298,6 +298,7 @@ func TestParser_Parse(t *testing.T) {
 		{
 			name: "Last.Week.Tonight.with.John.Oliver.S08E01.February.14.2021.720p.HMAX.WEB-DL.DD2.0.H.264-null.mkv",
 			want: Torrent{
+				Audio:       "DD2.0",
 				Codec:       "h264",
 				Container:   "mkv",
 				Group:       "null",
@@ -347,7 +348,7 @@ func TestParser_Parse(t *testing.T) {
 				Group:       "TrollUHD",
 				Source:      "webrip",
 				Codec:       "x265",
-				Audio:       "atmos",
+				Audio:       "DD+ Atmos",
 				Season:      1,
 				Hdr:         true,
 			},
@@ -370,6 +371,7 @@ func TestParser_Parse(t *testing.T) {
 		{
 			name: "Sicario 2015 PROPER 1080p BluRay DD-EX x264-TayTO.mp4",
 			want: Torrent{
+				Audio:       "DD-EX",
 				Title:       "Sicario",
 				ContentType: Movie,
 				Year:        2015,

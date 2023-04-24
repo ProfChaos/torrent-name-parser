@@ -26,7 +26,7 @@ func TestParser_GetAudio(t *testing.T) {
 		},
 		{
 			name: "Jimmy Kimmel 2017 05 03 720p HDTV DD5 1 MPEG2-CTL",
-			want: "dd5.1",
+			want: "DD5.1",
 		},
 		{
 			name: "A Dog's Purpose 2016 BDRip 720p X265 Ac3-GANJAMAN",
