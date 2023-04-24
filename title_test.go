@@ -28,6 +28,10 @@ func TestParser_GetTitle(t *testing.T) {
 			name: "Utøya 22. juli AKA U - 22 july [2018].mp4",
 			want: []string{"Utøya 22 juli", "U - 22 july"},
 		},
+		{
+			name: "The Wizard of Oz (1939) (2160p BluRay AI x265 HEVC 10bit DDP 5.1 Joy) [UTR]",
+			want: []string{"The Wizard of Oz"},
+		},
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
