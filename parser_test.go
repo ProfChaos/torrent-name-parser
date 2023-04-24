@@ -370,6 +370,20 @@ func TestParser_Parse(t *testing.T) {
 				Season:      -1,
 			},
 		},
+		{
+			name: "Succession.S01.1080p.BluRay.REMUX.AVC.DTS-HD.MA.5.1-NOGRP",
+			want: Torrent{
+				Title:       "Succession",
+				ContentType: TV,
+				Resolution:  "1080p",
+				Codec:       "avc",
+				Group:       "NOGRP",
+				Season:      1,
+				Source:      "bluray",
+				Audio:       "dts-hd",
+				Seasons:     []int{1},
+			},
+		},
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
