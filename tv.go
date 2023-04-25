@@ -1,7 +1,6 @@
 package torrentparser
 
 import (
-	"fmt"
 	"regexp"
 	"strconv"
 	"strings"
@@ -52,10 +51,9 @@ func (p *parser) GetSeasons() []int {
 		}
 	}
 
-	for idx, seasonRangeRX := range []*regexp.Regexp{seasonRange1, seasonRange2, seasonRange3} {
+	for _, seasonRangeRX := range []*regexp.Regexp{seasonRange1, seasonRange2, seasonRange3} {
 		seasons := p.FindNumbers("seasonRange", seasonRangeRX, FindNumbersOptions{})
 		if seasons != nil && seasons[1] > seasons[0] {
-			fmt.Printf("matched in season range on regex %d\n", idx)
 			return intRange(seasons[0], seasons[1])
 		}
 	}
