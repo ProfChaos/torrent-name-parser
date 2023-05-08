@@ -2,6 +2,8 @@ package torrentparser
 
 import (
 	"regexp"
+
+	"golang.org/x/exp/slices"
 )
 
 var (
@@ -23,7 +25,7 @@ func init() {
 	hardcodedGeneral = regexp.MustCompile(`(?i)\bHC|HARDCODED\b`)
 	regionGeneral = regexp.MustCompile(`(?i)dvd(R[0-9])`)
 	containerGeneral = regexp.MustCompile(`(?i)\.(MKV|AVI|MP4)$`)
-	hdrGeneral = regexp.MustCompile("(?i)hdr")
+	hdrGeneral = regexp.MustCompile("(?i)hdr(?:10)?|dv")
 	repackGeneral = regexp.MustCompile("(?i)repack|rerip")
 	extendedGeneral = regexp.MustCompile("(?i)extended")
 	properGeneral = regexp.MustCompile("(?i)proper")
@@ -50,8 +52,24 @@ func (p *parser) GetContainer() string {
 	return p.FindString("container", containerGeneral, FindStringOptions{})
 }
 
-func (p *parser) GetHdr() bool {
-	return p.FindBoolean("hdr", hdrGeneral)
+func (p *parser) Hdr() ([]string, bool) {
+	isHDR := false
+	return p.FindStrings("hdr", hdrGeneral, FindStringsOptions{
+		Handler: func(s []string) []string {
+			if len(s) > 0 {
+				isHDR = true
+			}
+			pos := slices.Index(s, "HDR")
+			if pos != -1 {
+				if len(s) == 1 {
+					return nil
+				}
+
+				return slices.Delete(s, pos, pos+1)
+			}
+			return s
+		},
+	}), isHDR
 }
 
 func (p *parser) Repack() bool {

@@ -60,6 +60,7 @@ type Torrent struct {
 	Episode          int         `json:"episode"`
 	Languages        []string    `json:"languages"`
 	Hdr              bool        `json:"hdr"`
+	HdrType          []string    `json:"hdrType"`
 	ColorDepth       string      `json:"colorDepth"`
 	Date             string      `json:"date"`
 }
@@ -101,6 +102,15 @@ func ParseName(name string) (Torrent, error) {
 	return p.Parse()
 }
 
+func DebugParser(name string) {
+	p := &parser{Name: name, MatchedIndicies: map[string]index{}, LowestIndex: len(name)}
+	p.Parse()
+
+	for _, index := range p.MatchedIndicies {
+		fmt.Printf("%s\033[34m%s\033[0m%s | \033[34m%s\033[0m\n", name[:index.Start], name[index.Start:index.End], name[index.End:], index.Name)
+	}
+}
+
 func (p *parser) Parse() (Torrent, error) {
 	torrent := Torrent{
 		Season: -1,
@@ -127,7 +137,7 @@ func (p *parser) Parse() (Torrent, error) {
 	}
 	torrent.Episode = p.GetEpisode()
 	torrent.Unrated = p.GetUnrated()
-	torrent.Hdr = p.GetHdr()
+	torrent.HdrType, torrent.Hdr = p.Hdr()
 	torrent.ColorDepth = p.GetColorDepth()
 	torrent.Languages = p.GetLanguages()
 
@@ -180,6 +190,7 @@ func (p *parser) FindBoolean(attr string, rx *regexp.Regexp) bool {
 	if p.MatchedRange(loc[0], loc[1]) {
 		return false
 	}
+	p.AddMatchedIndex(attr, loc)
 	p.setLowestIndex(loc[0])
 	return true
 }
@@ -357,8 +368,8 @@ func (p *parser) shouldAllReturnNil(name string, locs [][]int) ([]string, bool) 
 	}
 
 	matches := make([]string, 0)
-	for _, loc := range locs {
-		match, returnNil := p.shouldReturnNil(name, loc)
+	for i, loc := range locs {
+		match, returnNil := p.shouldReturnNil(fmt.Sprintf("%s%d", name, i), loc)
 		if returnNil {
 			return nil, true
 		}

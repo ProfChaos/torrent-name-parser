@@ -369,6 +369,7 @@ func TestParser_Parse(t *testing.T) {
 				Group:       "NAHOM",
 				Source:      "bdremux",
 				Languages:   []string{"ita", "eng"},
+				HdrType:     []string{"DV"},
 				Hdr:         true,
 				Season:      -1,
 			},
@@ -401,6 +402,23 @@ func TestParser_Parse(t *testing.T) {
 				Season:      -1,
 				Proper:      true,
 				Container:   "mp4",
+			},
+		},
+		{
+			name: "Ant-Man.and.the.Wasp.Quantumania.2023.2160p.MA.WEB-DL.DDP5.1.Atmos.DV.HDR10.H.265-CMRG.mkv",
+			want: Torrent{
+				Title:       "Ant-Man and the Wasp Quantumania",
+				Year:        2023,
+				Resolution:  "4k",
+				Container:   "mkv",
+				Source:      "web-dl",
+				Codec:       "h265",
+				Audio:       "DDP5.1 Atmos",
+				HdrType:     []string{"DV", "HDR10"},
+				Hdr:         true,
+				Season:      -1,
+				Group:       "CMRG",
+				ContentType: Movie,
 			},
 		},
 	}
@@ -446,7 +464,7 @@ func TestContentType(t *testing.T) {
 func TestTorrentScanAndValue(t *testing.T) {
 	var torrent Torrent
 
-	jsonStr := `{"title":"Pirates of the Caribbean Dead Mans Chest","alternativeTitle":"","contentType":0,"year":0,"resolution":"4k","extended":false,"unrated":false,"proper":false,"repack":false,"convert":false,"hardcoded":false,"retail":false,"remastered":false,"region":"","container":"mkv","source":"web-dl","codec":"hevc","audio":"dts-hd","group":"WATCHER","season":-1,"seasons":null,"episode":0,"languages":null,"hdr":true,"colorDepth":"","date":""}`
+	jsonStr := `{"title":"Pirates of the Caribbean Dead Mans Chest","alternativeTitle":"","contentType":0,"year":0,"resolution":"4k","extended":false,"unrated":false,"proper":false,"repack":false,"convert":false,"hardcoded":false,"retail":false,"remastered":false,"region":"","container":"mkv","source":"web-dl","codec":"hevc","audio":"dts-hd","group":"WATCHER","season":-1,"seasons":null,"episode":0,"languages":null,"hdr":true,"hdrType":null,"colorDepth":"","date":""}`
 
 	err := torrent.Scan(jsonStr)
 	if err != nil {
