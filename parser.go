@@ -59,7 +59,8 @@ type Torrent struct {
 	Seasons          []int       `json:"seasons"`
 	Episode          int         `json:"episode"`
 	Languages        []string    `json:"languages"`
-	Hdr              []string    `json:"hdr"`
+	Hdr              bool        `json:"hdr"`
+	HdrType          []string    `json:"hdrType"`
 	ColorDepth       string      `json:"colorDepth"`
 	Date             string      `json:"date"`
 }
@@ -136,7 +137,7 @@ func (p *parser) Parse() (Torrent, error) {
 	}
 	torrent.Episode = p.GetEpisode()
 	torrent.Unrated = p.GetUnrated()
-	torrent.Hdr = p.GetHdr()
+	torrent.HdrType, torrent.Hdr = p.Hdr()
 	torrent.ColorDepth = p.GetColorDepth()
 	torrent.Languages = p.GetLanguages()
 

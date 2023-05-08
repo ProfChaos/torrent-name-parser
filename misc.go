@@ -2,6 +2,8 @@ package torrentparser
 
 import (
 	"regexp"
+
+	"golang.org/x/exp/slices"
 )
 
 var (
@@ -50,8 +52,24 @@ func (p *parser) GetContainer() string {
 	return p.FindString("container", containerGeneral, FindStringOptions{})
 }
 
-func (p *parser) GetHdr() []string {
-	return p.FindStrings("hdr", hdrGeneral, FindStringsOptions{})
+func (p *parser) Hdr() ([]string, bool) {
+	isHDR := false
+	return p.FindStrings("hdr", hdrGeneral, FindStringsOptions{
+		Handler: func(s []string) []string {
+			if len(s) > 0 {
+				isHDR = true
+			}
+			pos := slices.Index(s, "HDR")
+			if pos != -1 {
+				if len(s) == 1 {
+					return nil
+				}
+
+				return slices.Delete(s, pos, pos+1)
+			}
+			return s
+		},
+	}), isHDR
 }
 
 func (p *parser) Repack() bool {
