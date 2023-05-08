@@ -56,6 +56,7 @@ type Torrent struct {
 	Audio            string      `json:"audio"`
 	Group            string      `json:"group"`
 	Season           int         `json:"season"`
+	Seasons          []int       `json:"seasons"`
 	Episode          int         `json:"episode"`
 	Languages        []string    `json:"languages"`
 	Hdr              bool        `json:"hdr"`
@@ -120,7 +121,10 @@ func (p *parser) Parse() (Torrent, error) {
 	torrent.Source = p.GetSource()
 	torrent.Codec = p.GetCodec()
 	torrent.Audio = p.GetAudio()
-	torrent.Season = p.GetSeason()
+	torrent.Seasons = p.GetSeasons()
+	if len(torrent.Seasons) == 1 {
+		torrent.Season = torrent.Seasons[0]
+	}
 	torrent.Episode = p.GetEpisode()
 	torrent.Unrated = p.GetUnrated()
 	torrent.Hdr = p.GetHdr()
@@ -213,11 +217,13 @@ func (p *parser) FindString(attr string, rx *regexp.Regexp, options FindStringOp
 		return options.Value
 	}
 
+	// Function expects a single result, so we take the last match
+	lastName := name[len(name)-1]
 	if options.Handler != nil {
-		return options.Handler(name)
+		return options.Handler(lastName)
 	}
 
-	return name
+	return lastName
 }
 
 func (p *parser) FindStrings(attr string, rx *regexp.Regexp, options FindStringsOptions) []string {
@@ -268,11 +274,13 @@ func (p *parser) parseNumber(attr string, loc []int, options FindNumberOptions) 
 		return options.Value
 	}
 
+	// Function expects a single result, so we take the last match
+	lastName := name[len(name)-1]
 	if options.Cleaner != nil {
-		name = options.Cleaner(name)
+		lastName = options.Cleaner(lastName)
 	}
 
-	number, err := strconv.Atoi(name)
+	number, err := strconv.Atoi(lastName)
 	if err != nil {
 		fmt.Println("FindNumber:", err)
 		return options.NilValue
@@ -285,29 +293,62 @@ func (p *parser) parseNumber(attr string, loc []int, options FindNumberOptions) 
 	return number
 }
 
-func (p *parser) shouldReturnNil(name string, loc []int) (string, bool) {
-	if len(loc) == 0 {
-		return "", true
+type FindNumbersOptions struct {
+	NilValue []int
+}
+
+func (p *parser) FindNumbers(attr string, rx *regexp.Regexp, options FindNumbersOptions) []int {
+	locs := rx.FindAllStringSubmatchIndex(p.Name, -1)
+	return p.parseNumbers(attr, locs, options)
+}
+
+func (p *parser) parseNumbers(attr string, loc [][]int, options FindNumbersOptions) []int {
+	names, returnNil := p.shouldAllReturnNil(attr, loc)
+	if returnNil {
+		return options.NilValue
 	}
 
-	if len(loc) == 4 && p.MatchedRange(loc[2], loc[3]) {
-		return "", true
+	numbers := make([]int, len(names))
+	for i, n := range names {
+		number, err := strconv.Atoi(n)
+		if err != nil {
+			fmt.Println("FindNumber:", err)
+			return options.NilValue
+		}
+		numbers[i] = number
+	}
+
+	return numbers
+}
+
+func (p *parser) shouldReturnNil(name string, loc []int) ([]string, bool) {
+	if len(loc) == 0 {
+		return nil, true
+	}
+
+	if len(loc) == 6 && p.MatchedRange(loc[4], loc[5]) {
+		return nil, true
+	} else if len(loc) == 4 && p.MatchedRange(loc[2], loc[3]) {
+		return nil, true
 	} else if len(loc) == 2 && p.MatchedRange(loc[0], loc[1]) {
-		return "", true
+		return nil, true
 	}
 
 	p.setLowestIndex(loc[0])
 
-	var match string
-	if len(loc) == 4 {
-		match = p.Name[loc[2]:loc[3]]
+	matches := make([]string, 0)
+	if len(loc) == 6 {
+		matches = append(matches, p.Name[loc[2]:loc[3]], p.Name[loc[4]:loc[5]])
+		p.AddMatchedIndex(name, []int{loc[2], loc[5]})
+	} else if len(loc) == 4 {
+		matches = append(matches, p.Name[loc[2]:loc[3]])
 		p.AddMatchedIndex(name, []int{loc[2], loc[3]})
 	} else {
-		match = p.Name[loc[0]:loc[1]]
+		matches = append(matches, p.Name[loc[0]:loc[1]])
 		p.AddMatchedIndex(name, []int{loc[0], loc[1]})
 	}
 
-	return match, false
+	return matches, false
 }
 
 func (p *parser) shouldAllReturnNil(name string, locs [][]int) ([]string, bool) {
@@ -321,7 +362,7 @@ func (p *parser) shouldAllReturnNil(name string, locs [][]int) ([]string, bool) 
 		if returnNil {
 			return nil, true
 		}
-		matches = append(matches, match)
+		matches = append(matches, match...)
 	}
 
 	return matches, false
