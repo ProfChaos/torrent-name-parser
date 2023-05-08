@@ -464,7 +464,7 @@ func TestContentType(t *testing.T) {
 func TestTorrentScanAndValue(t *testing.T) {
 	var torrent Torrent
 
-	jsonStr := `{"title":"Pirates of the Caribbean Dead Mans Chest","alternativeTitle":"","contentType":0,"year":0,"resolution":"4k","extended":false,"unrated":false,"proper":false,"repack":false,"convert":false,"hardcoded":false,"retail":false,"remastered":false,"region":"","container":"mkv","source":"web-dl","codec":"hevc","audio":"dts-hd","group":"WATCHER","season":-1,"seasons":null,"episode":0,"languages":null,"hdr":true,"colorDepth":"","date":""}`
+	jsonStr := `{"title":"Pirates of the Caribbean Dead Mans Chest","alternativeTitle":"","contentType":0,"year":0,"resolution":"4k","extended":false,"unrated":false,"proper":false,"repack":false,"convert":false,"hardcoded":false,"retail":false,"remastered":false,"region":"","container":"mkv","source":"web-dl","codec":"hevc","audio":"dts-hd","group":"WATCHER","season":-1,"seasons":null,"episode":0,"languages":null,"hdr":true,"hdrType":null,"colorDepth":"","date":""}`
 
 	err := torrent.Scan(jsonStr)
 	if err != nil {
