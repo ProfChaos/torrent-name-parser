@@ -1,11 +1,8 @@
 module github.com/ProfChaos/torrent-name-parser
 
-go 1.20
+go 1.21
 
-require (
-	github.com/stretchr/testify v1.8.2
-	golang.org/x/exp v0.0.0-20230425010034-47ecfdc1ba53
-)
+require github.com/stretchr/testify v1.8.4
 
 require (
 	github.com/davecgh/go-spew v1.1.1 // indirect

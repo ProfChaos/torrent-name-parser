@@ -2,8 +2,7 @@ package torrentparser
 
 import (
 	"regexp"
-
-	"golang.org/x/exp/slices"
+	"slices"
 )
 
 var (

@@ -293,7 +293,6 @@ func (p *parser) parseNumber(attr string, loc []int, options FindNumberOptions) 
 
 	number, err := strconv.Atoi(lastName)
 	if err != nil {
-		fmt.Println("FindNumber:", err)
 		return options.NilValue
 	}
 
@@ -323,7 +322,6 @@ func (p *parser) parseNumbers(attr string, loc [][]int, options FindNumbersOptio
 	for i, n := range names {
 		number, err := strconv.Atoi(n)
 		if err != nil {
-			fmt.Println("FindNumber:", err)
 			return options.NilValue
 		}
 		numbers[i] = number

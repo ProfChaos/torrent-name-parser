@@ -494,3 +494,7 @@ func TestTorrentScanAndValue(t *testing.T) {
 	}
 
 }
+
+func TestDebugParser(t *testing.T) {
+	DebugParser("Star.Wars.Episode.IX.The.Rise.of.Skywalker.2019.2160p.WEB-DL.DDP5.1.Atmos.HEVC-BLUTONiUM.mkv")
+}
