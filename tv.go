@@ -34,11 +34,11 @@ func init() {
 	seasonGeneral = regexp.MustCompile(`(?i)[^\w]S([0-9]{1,2})(?: ?E[0-9]{1,2})?`)
 	seasonSaison = regexp.MustCompile(`(?i)(?:\(?Saison|Season)[. _-]?([0-9]{1,2})`)
 	seasonX = regexp.MustCompile(`(?i)[^\d]+([0-9]{1,2})x[0-9]{1,2}[^\d]+`)
-	episodeGeneral = regexp.MustCompile("(?i)S[0-9]{1,2} ?E([0-9]{1,2})")
+	episodeGeneral = regexp.MustCompile(`(?i)S[0-9]{1,2} ?E([0-9]{1,2})`)
 	episodeSeason = regexp.MustCompile(`(?i)\(Season \d+\) ([0-9]{1,3})\s`)
 	episodeEpisode = regexp.MustCompile(`(?i)[ée]p(?:isode)?[. _-]?([0-9]{1,3})`)
 	episodeAnime = regexp.MustCompile(`(?i)- ([0-9]{1,3}) (?:\[|\()`)
-	episodeX = regexp.MustCompile("(?i)[0-9]{1,2}x([0-9]{1,2})")
+	episodeX = regexp.MustCompile(`(?i)[0-9]{1,2}x([0-9]{1,2})`)
 }
 
 func (p *parser) GetSeasons() []int {

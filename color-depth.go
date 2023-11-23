@@ -10,8 +10,8 @@ var (
 )
 
 func init() {
-	tenBit = regexp.MustCompile("(?i)10-?bit")
-	eightBit = regexp.MustCompile("(?i)8-?bit")
+	tenBit = regexp.MustCompile(`(?i)10-?bit`)
+	eightBit = regexp.MustCompile(`(?i)8-?bit`)
 }
 
 func (p *parser) GetColorDepth() string {
