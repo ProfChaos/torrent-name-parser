@@ -13,7 +13,7 @@ var (
 )
 
 func init() {
-	groupDZon3 = regexp.MustCompile("(?i)D-Z0N3")
+	groupDZon3 = regexp.MustCompile(`(?i)D-Z0N3`)
 	groupEnd = regexp.MustCompile(`(?i)- ?([^\-. ]+)(?:\.\w+)?$`)
 	groupStart = regexp.MustCompile(`(?i)^(\w+-)`)
 	groupBracketStart = regexp.MustCompile(`(?i)^(\[[^\]]+\])`)

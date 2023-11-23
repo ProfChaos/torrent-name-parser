@@ -421,6 +421,21 @@ func TestParser_Parse(t *testing.T) {
 				ContentType: Movie,
 			},
 		},
+		{
+			name: "Chilling.Adventures.of.Sabrina.S01.1080p.NF.WEB-DL.DD5.1.x264-NTG.mp4",
+			want: Torrent{
+				Title:       "Chilling Adventures of Sabrina",
+				Season:      1,
+				Seasons:     []int{1},
+				Resolution:  "1080p",
+				Source:      "web-dl",
+				Codec:       "x264",
+				Audio:       "DD5.1",
+				Group:       "NTG",
+				ContentType: TV,
+				Container:   "mp4",
+			},
+		},
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {

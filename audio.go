@@ -15,9 +15,9 @@ var (
 
 func init() {
 	audioGeneral = regexp.MustCompile(`(?i)MD|MP3|mp3|FLAC|DTS(?:-HD)?|TrueHD|Dual[- ]Audio`)
-	audioAc3 = regexp.MustCompile("(?i)AC-?3(?:.5.1)?")
+	audioAc3 = regexp.MustCompile(`(?i)AC-?3(?:.5.1)?`)
 	audioDolbyDigital = regexp.MustCompile(`(?i)DD(?:-EX|\+)?(?:\d[. ]\d)?(?:.+Atmos)?`)
-	audioAac = regexp.MustCompile("(?i)AAC(?:[. ]?2[. ]0)?")
+	audioAac = regexp.MustCompile(`(?i)AAC(?:[. ]?2[. ]0)?`)
 	atmosRx = regexp.MustCompile(`(?i).atmos`)
 }
 

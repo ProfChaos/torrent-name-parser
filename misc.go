@@ -22,13 +22,13 @@ func init() {
 	unratedGeneral = regexp.MustCompile(`(?i)\bunrated|uncensored\b`)
 	remasterGeneral = regexp.MustCompile(`(?i)\bRemaster(?:ed)?\b`)
 	hardcodedGeneral = regexp.MustCompile(`(?i)\bHC|HARDCODED\b`)
-	regionGeneral = regexp.MustCompile(`(?i)dvd(R[0-9])`)
+	regionGeneral = regexp.MustCompile(`(?i)\bdvd(R[0-9])\b`)
 	containerGeneral = regexp.MustCompile(`(?i)\.(MKV|AVI|MP4)$`)
-	hdrGeneral = regexp.MustCompile("(?i)hdr(?:10)?|dv")
-	repackGeneral = regexp.MustCompile("(?i)repack|rerip")
-	extendedGeneral = regexp.MustCompile("(?i)extended")
-	properGeneral = regexp.MustCompile("(?i)proper")
-	convertGeneral = regexp.MustCompile("(?i)convert")
+	hdrGeneral = regexp.MustCompile(`(?i)\b(?:hdr(?:10)?|dv)\b`)
+	repackGeneral = regexp.MustCompile(`(?i)\brepack|rerip\b`)
+	extendedGeneral = regexp.MustCompile(`(?i)\bextended\b`)
+	properGeneral = regexp.MustCompile(`(?i)\bproper\b`)
+	convertGeneral = regexp.MustCompile(`(?i)\bconvert\b`)
 }
 
 func (p *parser) GetUnrated() bool {

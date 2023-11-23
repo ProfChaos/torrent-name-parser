@@ -11,8 +11,8 @@ var (
 )
 
 func init() {
-	codecGeneral = regexp.MustCompile("(?i)dvix|mpeg2|divx|xvid|[xh][-. ]?26[45]|avc|hevc")
-	codecRemove = regexp.MustCompile("(?i)[ .-]")
+	codecGeneral = regexp.MustCompile(`(?i)dvix|mpeg2|divx|xvid|[xh][-. ]?26[45]|avc|hevc`)
+	codecRemove = regexp.MustCompile(`(?i)[ .-]`)
 }
 
 func (p *parser) GetCodec() string {
