@@ -14,10 +14,12 @@ var (
 )
 
 func init() {
-	audioGeneral = regexp.MustCompile(`(?i)MD|MP3|mp3|FLAC|DTS(?:-HD)?|TrueHD|Dual[- ]Audio`)
-	audioAc3 = regexp.MustCompile(`(?i)AC-?3(?:.5.1)?`)
-	audioDolbyDigital = regexp.MustCompile(`(?i)DD(?:-EX|\+)?(?:\d[. ]\d)?(?:.+Atmos)?`)
-	audioAac = regexp.MustCompile(`(?i)AAC(?:[. ]?2[. ]0)?`)
+	audioGeneral = regexp.MustCompile(`(?i)\b(?:MD|MP3|mp3|FLAC|DTS(?:-HD)?|TrueHD|Dual[- ]Audio)\b`)
+	audioAc3 = regexp.MustCompile(`(?i)\bAC-?3(?:.5.1)?\b`)
+	audioDolbyDigital = regexp.MustCompile(`(?i)\bDD(?:-EX|\+)?(?:\d[. ]\d)?(?:.+Atmos)?\b`)
+	audioAac = regexp.MustCompile(`(?i)\bAAC(?:[. ]?2[. ]0)?\b`)
+
+	// Regex for replacing
 	atmosRx = regexp.MustCompile(`(?i).atmos`)
 }
 

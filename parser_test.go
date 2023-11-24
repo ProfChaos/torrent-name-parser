@@ -436,6 +436,20 @@ func TestParser_Parse(t *testing.T) {
 				Container:   "mp4",
 			},
 		},
+		{
+			name: "Crouching.Tiger.Hidden.Dragon.2000.2160p.UHD.BluRay.x265-DEPTH.mkv",
+			want: Torrent{
+				Title:       "Crouching Tiger Hidden Dragon",
+				Year:        2000,
+				Resolution:  "4k",
+				Source:      "bluray",
+				Codec:       "x265",
+				Group:       "DEPTH",
+				Container:   "mkv",
+				ContentType: Movie,
+				Season:      -1,
+			},
+		},
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
