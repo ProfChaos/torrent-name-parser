@@ -11,7 +11,9 @@ var (
 )
 
 func init() {
-	codecGeneral = regexp.MustCompile(`(?i)dvix|mpeg2|divx|xvid|[xh][-. ]?26[45]|avc|hevc`)
+	codecGeneral = regexp.MustCompile(`(?i)\b(?:vix|mpeg2|divx|xvid|[xh][-. ]?26[45]|avc|hevc)\b`)
+
+	// Regex for replacing
 	codecRemove = regexp.MustCompile(`(?i)[ .-]`)
 }
 

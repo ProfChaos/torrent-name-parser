@@ -24,6 +24,10 @@ func TestParser_GetResolution(t *testing.T) {
 			want: "4k",
 		},
 		{
+			name: "A.Movie.2014.4320p.PROPER.HC.WEBRip.x264.AAC.2.0-RARBG",
+			want: "8k",
+		},
+		{
 			name: "[BlurayDesuYo] Shingeki no Kyojin (Season 3) 38 (BD 1920x1080 10bit FLAC) [619BE7E0].mkv",
 			want: "1080",
 		},

@@ -6,6 +6,7 @@ import (
 	"fmt"
 	"regexp"
 	"strconv"
+	"time"
 )
 
 var (
@@ -104,7 +105,10 @@ func ParseName(name string) (Torrent, error) {
 
 func DebugParser(name string) {
 	p := &parser{Name: name, MatchedIndicies: map[string]index{}, LowestIndex: len(name)}
+
+	start := time.Now()
 	p.Parse()
+	fmt.Printf("Parsing took %s\n", time.Since(start))
 
 	for _, index := range p.MatchedIndicies {
 		fmt.Printf("%s\033[34m%s\033[0m%s | \033[34m%s\033[0m\n", name[:index.Start], name[index.Start:index.End], name[index.End:], index.Name)

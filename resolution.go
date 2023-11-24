@@ -14,8 +14,8 @@ var (
 
 func init() {
 	resolutionX = regexp.MustCompile(`(?i)[0-9]{3,4}x([0-9]{3,4})`)
-	resolution4k = regexp.MustCompile(`(?i)(4k|2160p)`)
-	resolution8k = regexp.MustCompile(`(?i)(8k|4320p)`)
+	resolution4k = regexp.MustCompile(`(?i)\b(4k|2160p)\b`)
+	resolution8k = regexp.MustCompile(`(?i)\b(8k|4320p)\b`)
 	resolutionGeneral = regexp.MustCompile(`(?i)[0-9]{3,4}[pi]`)
 }
 
