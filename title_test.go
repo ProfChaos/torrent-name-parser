@@ -35,6 +35,10 @@ func TestParser_GetTitle(t *testing.T) {
 			name:  "The Wizard of Oz (1939) (2160p BluRay AI x265 HEVC 10bit DDP 5.1 Joy) [UTR]",
 			title: "The Wizard of Oz",
 		},
+		{
+			name:  "Black.Panther.Wakanda.Forever.2022.2160p.UHD.BluRay.x265-SURCODE.mkv",
+			title: "Black Panther Wakanda Forever",
+		},
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
