@@ -10,7 +10,7 @@ var (
 )
 
 func init() {
-	akaTitle = regexp.MustCompile(`(?i)(?:aka)(.+)`)
+	akaTitle = regexp.MustCompile(`(?i)(?:\baka\b)(.+)`)
 }
 
 func (p *parser) GetTitles() (string, string) {

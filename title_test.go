@@ -3,7 +3,7 @@ package torrentparser
 import (
 	"testing"
 
-	"github.com/stretchr/testify/assert"
+	"github.com/google/go-cmp/cmp"
 )
 
 func TestParser_GetTitle(t *testing.T) {
@@ -35,12 +35,20 @@ func TestParser_GetTitle(t *testing.T) {
 			name:  "The Wizard of Oz (1939) (2160p BluRay AI x265 HEVC 10bit DDP 5.1 Joy) [UTR]",
 			title: "The Wizard of Oz",
 		},
+		{
+			name:  "Black.Panther.Wakanda.Forever.2022.2160p.UHD.BluRay.x265-SURCODE.mkv",
+			title: "Black Panther Wakanda Forever",
+		},
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
 			p, _ := ParseName(tt.name)
-			assert.Equal(t, tt.title, p.Title)
-			assert.Equal(t, tt.alternativeTitle, p.AlternativeTitle)
+			if !cmp.Equal(tt.title, p.Title) {
+				t.Errorf("diff -want +got: %s", cmp.Diff(tt.title, p.Title))
+			}
+			if !cmp.Equal(tt.alternativeTitle, p.AlternativeTitle) {
+				t.Errorf("diff -want +got: %s", cmp.Diff(tt.alternativeTitle, p.AlternativeTitle))
+			}
 		})
 	}
 }

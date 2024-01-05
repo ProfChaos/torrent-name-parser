@@ -167,14 +167,14 @@ func (p *parser) Parse() (Torrent, error) {
 }
 
 func (p *parser) MatchedRange(start, end int) bool {
-	for _, aRange := range p.MatchedIndicies {
-		if start <= aRange.Start && end >= aRange.End {
+	for _, matchedRange := range p.MatchedIndicies {
+		if start <= matchedRange.Start && end >= matchedRange.End {
 			return true
 		}
-		if start >= aRange.Start && start < aRange.End {
+		if start >= matchedRange.Start && start < matchedRange.End {
 			return true
 		}
-		if end > aRange.Start && end <= aRange.End {
+		if end > matchedRange.Start && end <= matchedRange.End {
 			return true
 		}
 	}
