@@ -4,7 +4,7 @@ import (
 	"reflect"
 	"testing"
 
-	"github.com/stretchr/testify/assert"
+	"github.com/google/go-cmp/cmp"
 )
 
 func TestParser_Parse(t *testing.T) {
@@ -458,7 +458,11 @@ func TestParser_Parse(t *testing.T) {
 				t.Errorf("Parser.Parse() error = %v, wantErr %v", err, tt.wantErr)
 				return
 			}
-			assert.Equal(t, tt.want, got)
+
+			if !cmp.Equal(tt.want, got) {
+				// https://go.dev/wiki/TestComments#print-diffs
+				t.Errorf("diff -want +got: %s", cmp.Diff(tt.want, got))
+			}
 		})
 	}
 }
@@ -507,7 +511,10 @@ func TestTorrentScanAndValue(t *testing.T) {
 	if err != nil {
 		t.Error(err)
 	}
-	assert.Equal(t, jsonStr, str)
+	if !cmp.Equal(jsonStr, str) {
+		t.Errorf("diff -want +got: %s", cmp.Diff(jsonStr, str))
+
+	}
 
 	err = torrent.Scan([]byte(`{"title":"Rogue One A Star Wars Story","content_type":"movie","year":2016,"resolution":"1080p","container":"mkv","source":"bluray","codec":"x264","audio":"dts","group":"D-Z0N3","season":-1}`))
 	if err != nil {
@@ -526,4 +533,151 @@ func TestTorrentScanAndValue(t *testing.T) {
 
 func TestDebugParser(t *testing.T) {
 	DebugParser("Star.Wars.Episode.IX.The.Rise.of.Skywalker.2019.2160p.WEB-DL.DDP5.1.Atmos.HEVC-BLUTONiUM.mkv")
+}
+
+func Test_parser_MatchedRange(t *testing.T) {
+	type fields struct {
+		Name            string
+		MatchedIndicies map[string]index
+		LowestIndex     int
+		LowestWasZero   bool
+	}
+	type args struct {
+		start int
+		end   int
+	}
+	tests := []struct {
+		name   string
+		fields fields
+		args   args
+		want   bool
+	}{
+		{
+			name: "A---B---A---B",
+			fields: fields{
+				Name: "A---B---A---B",
+				MatchedIndicies: map[string]index{
+					"B": {
+						Name:  "B",
+						Start: 3,
+						End:   10,
+					},
+				},
+				LowestIndex:   0,
+				LowestWasZero: true,
+			},
+			args: args{
+				start: 1,
+				end:   6,
+			},
+			want: true,
+		},
+		{
+			name: "A---B---A---B",
+			fields: fields{
+				Name: "A---B---A---B",
+				MatchedIndicies: map[string]index{
+					"A": {
+						Name:  "A",
+						Start: 0,
+						End:   6,
+					},
+				},
+				LowestIndex:   0,
+				LowestWasZero: true,
+			},
+			args: args{
+				start: 3,
+				end:   10,
+			},
+			want: true,
+		},
+		{
+			name: "B---A---A---B",
+			fields: fields{
+				Name: "B---A---A---B",
+				MatchedIndicies: map[string]index{
+					"A": {
+						Name:  "A",
+						Start: 6,
+						End:   10,
+					},
+				},
+				LowestIndex:   0,
+				LowestWasZero: true,
+			},
+			args: args{
+				start: 0,
+				end:   14,
+			},
+			want: true,
+		},
+		{
+			name: "B---A---A---B",
+			fields: fields{
+				Name: "B---A---A---B",
+				MatchedIndicies: map[string]index{
+					"b": {
+						Name:  "B",
+						Start: 0,
+						End:   14,
+					},
+				},
+				LowestIndex:   0,
+				LowestWasZero: true,
+			},
+			args: args{
+				start: 4,
+				end:   10,
+			},
+			want: true,
+		},
+	}
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			p := &parser{
+				Name:            tt.fields.Name,
+				MatchedIndicies: tt.fields.MatchedIndicies,
+				LowestIndex:     tt.fields.LowestIndex,
+				LowestWasZero:   tt.fields.LowestWasZero,
+			}
+			if got := p.MatchedRange(tt.args.start, tt.args.end); got != tt.want {
+				t.Errorf("parser.MatchedRange() = %v, want %v", got, tt.want)
+			}
+		})
+	}
+}
+
+func TestParseNumber(t *testing.T) {
+	name := "Some.name.with.two.years.2019.2020"
+	p := parser{
+		Name:            name,
+		MatchedIndicies: map[string]index{},
+		LowestIndex:     len(name) - 1,
+		LowestWasZero:   false,
+	}
+
+	if got := p.parseNumber("year", []int{25, 29}, FindNumberOptions{}); got != 2019 {
+		t.Errorf("parser.parseNumber() = %v, want %v", got, 2019)
+	}
+
+	p.MatchedIndicies = map[string]index{}
+
+	if got := p.parseNumber("year", []int{25, 29}, FindNumberOptions{Value: 2020}); got != 2020 {
+		t.Errorf("parser.parseNumber() = %v, want %v", got, 2020)
+	}
+
+	p.MatchedIndicies = map[string]index{}
+
+	if got := p.parseNumber("year", []int{22, 29}, FindNumberOptions{NilValue: 13}); got != 13 {
+		t.Errorf("parser.parseNumber() = %v, want %v", got, 13)
+	}
+
+	p.MatchedIndicies = map[string]index{}
+
+	if got := p.parseNumber("year", []int{25, 29}, FindNumberOptions{Handler: func(i int) int {
+		return i + 1
+	}}); got != 2020 {
+		t.Errorf("parser.parseNumber() = %v, want %v", got, 2020)
+	}
 }

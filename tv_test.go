@@ -3,7 +3,7 @@ package torrentparser
 import (
 	"testing"
 
-	"github.com/stretchr/testify/assert"
+	"github.com/google/go-cmp/cmp"
 )
 
 func TestParser_GetSeason(t *testing.T) {
@@ -127,8 +127,12 @@ func TestParser_GetSeasonsNoEpisodes(t *testing.T) {
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
 			p, _ := ParseName(tt.name)
-			assert.Equal(t, 0, p.Episode, "expected no episodes to match")
-			assert.Equal(t, tt.want, p.Seasons)
+			if !cmp.Equal(tt.want, p.Seasons) {
+				t.Errorf("diff -want +got: %s", cmp.Diff(tt.want, p.Seasons))
+			}
+			if got := p.Episode; got != 0 {
+				t.Errorf("Parser.GetSeasonsNoEpisodes() = %v, want %v", got, 0)
+			}
 		})
 	}
 }
