@@ -6,22 +6,13 @@ import (
 )
 
 var (
-	atmosRx,
-	audioGeneral,
-	audioAc3,
-	audioDolbyDigital,
-	audioAac *regexp.Regexp
-)
-
-func init() {
-	audioGeneral = regexp.MustCompile(`(?i)\b(?:MD|MP3|mp3|FLAC|DTS(?:-HD)?|TrueHD|Dual[- ]Audio)\b`)
-	audioAc3 = regexp.MustCompile(`(?i)\bAC-?3(?:.5.1)?\b`)
+	audioGeneral      = regexp.MustCompile(`(?i)\b(?:MD|MP3|mp3|FLAC|DTS(?:-HD)?|TrueHD|Dual[- ]Audio)\b`)
+	audioAc3          = regexp.MustCompile(`(?i)\bAC-?3(?:.5.1)?\b`)
 	audioDolbyDigital = regexp.MustCompile(`(?i)\bDD(?:-EX|\+)?(?:\d[. ]\d)?(?:.+Atmos)?\b`)
-	audioAac = regexp.MustCompile(`(?i)\bAAC(?:[. ]?2[. ]0)?\b`)
-
+	audioAac          = regexp.MustCompile(`(?i)\bAAC(?:[. ]?2[. ]0)?\b`)
 	// Regex for replacing
 	atmosRx = regexp.MustCompile(`(?i).atmos`)
-}
+)
 
 func (p *parser) GetAudio() string {
 	audio := p.FindString("audio", audioGeneral, FindStringOptions{Handler: func(resStr string) string {

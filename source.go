@@ -6,15 +6,12 @@ import (
 )
 
 var (
-	sourceTelesync,
-	sourceDvd,
-	sourceGeneral *regexp.Regexp
+	sourceGeneral  = regexp.MustCompile(`(?i)\b(?:(?:HD-?)?CAM|(?:DVD|VHS)scr|TC|HDTV|R5|Blu-?ray|WEB-?(?:DL)?|(?:BR|BD|DVD|PPV|WEB|HD|(?:HD-?)?TV)-?Rip|(?:DL|WEB|BD|BR|BDRE|RE)MUX)\b`)
+	sourceTelesync = regexp.MustCompile(`(?i)\b(?:HD-?)?T(?:ELE)?S(?:YNC)?\b`)
+	sourceDvd      = regexp.MustCompile(`(?i)(DVD)(?:R[0-9])?`)
 )
 
 func init() {
-	sourceGeneral = regexp.MustCompile(`(?i)\b(?:(?:HD-?)?CAM|(?:DVD|VHS)scr|TC|HDTV|R5|Blu-?ray|WEB-?(?:DL)?|(?:BR|BD|DVD|PPV|WEB|HD|(?:HD-?)?TV)-?Rip|(?:DL|WEB|BD|BR|BDRE|RE)MUX)\b`)
-	sourceTelesync = regexp.MustCompile(`(?i)\b(?:HD-?)?T(?:ELE)?S(?:YNC)?\b`)
-	sourceDvd = regexp.MustCompile(`(?i)(DVD)(?:R[0-9])?`)
 }
 
 func (p *parser) GetSource() string {

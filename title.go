@@ -6,12 +6,8 @@ import (
 )
 
 var (
-	akaTitle *regexp.Regexp
-)
-
-func init() {
 	akaTitle = regexp.MustCompile(`(?i)(?:\baka\b)(.+)`)
-}
+)
 
 func (p *parser) GetTitles() (string, string) {
 

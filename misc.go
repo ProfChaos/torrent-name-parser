@@ -6,30 +6,17 @@ import (
 )
 
 var (
-	remasterGeneral,
-	regionGeneral,
-	hardcodedGeneral,
-	containerGeneral,
-	hdrGeneral,
-	repackGeneral,
-	extendedGeneral,
-	properGeneral,
-	convertGeneral,
-	unratedGeneral *regexp.Regexp
-)
-
-func init() {
-	unratedGeneral = regexp.MustCompile(`(?i)\b(?:unrated|uncensored)\b`)
-	remasterGeneral = regexp.MustCompile(`(?i)\bRemaster(?:ed)?\b`)
+	unratedGeneral   = regexp.MustCompile(`(?i)\b(?:unrated|uncensored)\b`)
+	remasterGeneral  = regexp.MustCompile(`(?i)\bRemaster(?:ed)?\b`)
 	hardcodedGeneral = regexp.MustCompile(`(?i)\b(?:HC|HARDCODED)\b`)
-	regionGeneral = regexp.MustCompile(`(?i)\bdvd(R[0-9])\b`)
+	regionGeneral    = regexp.MustCompile(`(?i)\bdvd(R[0-9])\b`)
 	containerGeneral = regexp.MustCompile(`(?i)\.(MKV|AVI|MP4)$`)
-	hdrGeneral = regexp.MustCompile(`(?i)\b(?:hdr(?:10)?|dv)\b`)
-	repackGeneral = regexp.MustCompile(`(?i)\b(?:repack|rerip)\b`)
-	extendedGeneral = regexp.MustCompile(`(?i)\bextended\b`)
-	properGeneral = regexp.MustCompile(`(?i)\bproper\b`)
-	convertGeneral = regexp.MustCompile(`(?i)\bconvert\b`)
-}
+	hdrGeneral       = regexp.MustCompile(`(?i)\b(?:hdr(?:10)?|dv)\b`)
+	repackGeneral    = regexp.MustCompile(`(?i)\b(?:repack|rerip)\b`)
+	extendedGeneral  = regexp.MustCompile(`(?i)\bextended\b`)
+	properGeneral    = regexp.MustCompile(`(?i)\bproper\b`)
+	convertGeneral   = regexp.MustCompile(`(?i)\bconvert\b`)
+)
 
 func (p *parser) GetUnrated() bool {
 	return p.FindBoolean("unrated", unratedGeneral)

@@ -5,14 +5,9 @@ import (
 )
 
 var (
-	tenBit,
-	eightBit *regexp.Regexp
-)
-
-func init() {
-	tenBit = regexp.MustCompile(`(?i)10-?bit`)
+	tenBit   = regexp.MustCompile(`(?i)10-?bit`)
 	eightBit = regexp.MustCompile(`(?i)8-?bit`)
-}
+)
 
 func (p *parser) GetColorDepth() string {
 	colorDepth := p.FindString("color-depth", tenBit, FindStringOptions{Value: "10-bit"})

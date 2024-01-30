@@ -10,12 +10,8 @@ import (
 )
 
 var (
-	removeNonDigits *regexp.Regexp
-)
-
-func init() {
 	removeNonDigits = regexp.MustCompile(`[^0-9]+`)
-}
+)
 
 type ContentType int64
 

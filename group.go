@@ -6,18 +6,11 @@ import (
 )
 
 var (
-	groupDZon3,
-	groupStart,
-	groupBracketStart,
-	groupEnd *regexp.Regexp
-)
-
-func init() {
-	groupDZon3 = regexp.MustCompile(`(?i)D-Z0N3`)
-	groupEnd = regexp.MustCompile(`(?i)- ?([^\-. ]+)(?:\.\w+)?$`)
-	groupStart = regexp.MustCompile(`(?i)^(\w+-)`)
+	groupDZon3        = regexp.MustCompile(`(?i)D-Z0N3`)
+	groupEnd          = regexp.MustCompile(`(?i)- ?([^\-. ]+)(?:\.\w+)?$`)
+	groupStart        = regexp.MustCompile(`(?i)^(\w+-)`)
 	groupBracketStart = regexp.MustCompile(`(?i)^(\[[^\]]+\])`)
-}
+)
 
 func (p *parser) GetGroup() string {
 	group := p.FindString("group", groupDZon3, FindStringOptions{})

@@ -7,21 +7,6 @@ import (
 )
 
 var (
-	episodeGeneral,
-	episodeX,
-	episodeEpisode,
-	episodeSeason,
-	episodeAnime,
-	seasonRange1,
-	seasonRange2,
-	seasonRange3,
-	seasonList,
-	seasonGeneral,
-	seasonX,
-	seasonSaison *regexp.Regexp
-)
-
-func init() {
 	// Some of these more complex regexes are adapted from https://github.com/TheBeastLT/parse-torrent-title
 	// Season ranges (ie, S01-S03) - must have two capture groups to denote the start and end of the range
 	seasonRange1 = regexp.MustCompile(`(?i)(?:complete\W|(?:seasons|series)?\W|\W|^)(?:s(\d{1,2})[, +/\\&-]+)+s(\d{1,2})\b`)
@@ -31,15 +16,15 @@ func init() {
 	// Season list matches a substring list of seasons (ie, 1,2,3,4,5)
 	seasonList = regexp.MustCompile(`(?i)(?:(?:\bthe\W)?\bcomplete\W)?(?:seasons?|[Сс]езони?|temporadas?)[. ]?[-:]?[. ]?[([]?((?:\d{1,2}[., /\\&]+)+\d{1,2}\b)[)\]]?`)
 
-	seasonGeneral = regexp.MustCompile(`(?i)[^\w]S([0-9]{1,2})(?: ?E[0-9]{1,2})?`)
-	seasonSaison = regexp.MustCompile(`(?i)(?:\(?Saison|Season)[. _-]?([0-9]{1,2})`)
-	seasonX = regexp.MustCompile(`(?i)[^\d]+([0-9]{1,2})x[0-9]{1,2}[^\d]+`)
+	seasonGeneral  = regexp.MustCompile(`(?i)[^\w]S([0-9]{1,2})(?: ?E[0-9]{1,2})?`)
+	seasonSaison   = regexp.MustCompile(`(?i)(?:\(?Saison|Season)[. _-]?([0-9]{1,2})`)
+	seasonX        = regexp.MustCompile(`(?i)[^\d]+([0-9]{1,2})x[0-9]{1,2}[^\d]+`)
 	episodeGeneral = regexp.MustCompile(`(?i)S[0-9]{1,2} ?E([0-9]{1,2})`)
-	episodeSeason = regexp.MustCompile(`(?i)\(Season \d+\) ([0-9]{1,3})\s`)
+	episodeSeason  = regexp.MustCompile(`(?i)\(Season \d+\) ([0-9]{1,3})\s`)
 	episodeEpisode = regexp.MustCompile(`(?i)[ée]p(?:isode)?[. _-]?([0-9]{1,3})`)
-	episodeAnime = regexp.MustCompile(`(?i)- ([0-9]{1,3}) (?:\[|\()`)
-	episodeX = regexp.MustCompile(`(?i)[0-9]{1,2}x([0-9]{1,2})`)
-}
+	episodeAnime   = regexp.MustCompile(`(?i)- ([0-9]{1,3}) (?:\[|\()`)
+	episodeX       = regexp.MustCompile(`(?i)[0-9]{1,2}x([0-9]{1,2})`)
+)
 
 func (p *parser) GetSeasons() []int {
 	// Try identify season ranges before individually defined seasons/single seasons
