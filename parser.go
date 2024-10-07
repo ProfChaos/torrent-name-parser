@@ -37,7 +37,7 @@ type Torrent struct {
 	AlternativeTitle string      `json:"alternativeTitle"`
 	ContentType      ContentType `json:"contentType"`
 	Year             int         `json:"year"`
-	Resolution       string      `json:"resolution"`
+	Resolution       Resolution  `json:"resolution"`
 	Extended         bool        `json:"extended"`
 	Unrated          bool        `json:"unrated"`
 	Proper           bool        `json:"proper"`
@@ -331,30 +331,28 @@ func (p *parser) parseNumbers(attr string, loc [][]int, options FindNumbersOptio
 }
 
 func (p *parser) shouldReturnNil(name string, loc []int) ([]string, bool) {
-	if len(loc) == 0 {
+	length := len(loc)
+	if length == 0 {
 		return nil, true
 	}
 
-	if len(loc) == 6 && p.MatchedRange(loc[4], loc[5]) {
-		return nil, true
-	} else if len(loc) == 4 && p.MatchedRange(loc[2], loc[3]) {
-		return nil, true
-	} else if len(loc) == 2 && p.MatchedRange(loc[0], loc[1]) {
+	if length > 1 && p.MatchedRange(loc[length-2], loc[length-1]) {
 		return nil, true
 	}
 
 	p.setLowestIndex(loc[0])
 
 	matches := make([]string, 0)
-	if len(loc) == 6 {
-		matches = append(matches, p.Name[loc[2]:loc[3]], p.Name[loc[4]:loc[5]])
-		p.AddMatchedIndex(name, []int{loc[2], loc[5]})
-	} else if len(loc) == 4 {
-		matches = append(matches, p.Name[loc[2]:loc[3]])
-		p.AddMatchedIndex(name, []int{loc[2], loc[3]})
-	} else {
+	// If we don't have any groups in the regex
+	if length == 2 {
 		matches = append(matches, p.Name[loc[0]:loc[1]])
 		p.AddMatchedIndex(name, []int{loc[0], loc[1]})
+	} else {
+		// Support for multiple groups
+		for i := 2; i < length; i += 2 {
+			matches = append(matches, p.Name[loc[i]:loc[i+1]])
+			p.AddMatchedIndex(name, []int{loc[i], loc[i+1]})
+		}
 	}
 
 	return matches, false

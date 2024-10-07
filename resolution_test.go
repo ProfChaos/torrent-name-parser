@@ -5,7 +5,7 @@ import "testing"
 func TestParser_GetResolution(t *testing.T) {
 	tests := []struct {
 		name string
-		want string
+		want Resolution
 	}{
 		{
 			name: "Annabelle.2014.1080p.PROPER.HC.WEBRip.x264.AAC.2.0-RARBG",
@@ -21,15 +21,15 @@ func TestParser_GetResolution(t *testing.T) {
 		},
 		{
 			name: "The Smurfs 2 2013 COMPLETE FULL BLURAY UHD (4K) - IPT EXCLUSIVE",
-			want: "4k",
+			want: "2160p",
 		},
 		{
 			name: "A.Movie.2014.4320p.PROPER.HC.WEBRip.x264.AAC.2.0-RARBG",
-			want: "8k",
+			want: "4320p",
 		},
 		{
 			name: "[BlurayDesuYo] Shingeki no Kyojin (Season 3) 38 (BD 1920x1080 10bit FLAC) [619BE7E0].mkv",
-			want: "1080",
+			want: "1080p",
 		},
 	}
 	for _, tt := range tests {
