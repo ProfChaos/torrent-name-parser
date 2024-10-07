@@ -122,6 +122,9 @@ func (p *parser) Parse() (Torrent, error) {
 	torrent.Proper = p.Proper()
 	torrent.Convert = p.Convert()
 	torrent.Resolution = p.GetResolution()
+	if !torrent.Resolution.Verify() {
+		torrent.Resolution = ResolutionUnknown
+	}
 	torrent.Date = p.GetDate()
 	torrent.Year = p.GetYear()
 	torrent.Group = p.GetGroup()
